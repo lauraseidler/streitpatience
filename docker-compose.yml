@@ -7,9 +7,9 @@ services:
       - mongo-data:/data/db
   
   api:
-    build: .
+    build: ./api
     volumes:
-      - .:/api
+      - ./api:/api
       - /api/node_modules
     environment:
       - NODE_ENV

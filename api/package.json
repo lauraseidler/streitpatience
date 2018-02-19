@@ -2,12 +2,12 @@
     "name": "streitpatience",
     "version": "0.0.1",
     "description": "Implementation of two-player game \"Streitpatience\" (also known as Russian Bank)",
-    "main": "server.js",
+    "main": "index.js",
     "repository": "git@github.com:mvuajua/streitpatience.git",
     "author": "Laura Seidler <hello@laura-seidler.de>",
     "license": "MIT",
     "scripts": {
-        "dev": "nodemon server.js --exec babel-node"
+        "dev": "nodemon index.js --exec babel-node"
     },
     "dependencies": {
         "express": "^4.16.2",
