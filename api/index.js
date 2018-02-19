@@ -7,6 +7,8 @@ const wsPort = process.env.WS_PORT || 4000;
 const app = express();
 const io = socketIO();
 
+app.use(express.static(`${__dirname}/ui`))
+
 app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello World' });
 });
