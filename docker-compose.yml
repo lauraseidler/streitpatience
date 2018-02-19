@@ -7,30 +7,27 @@ services:
       - mongo-data:/data/db
   
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     volumes:
       - .:/api
       - /api/node_modules
     environment:
-      NODE_ENV: development
-      PORT: 3000
-      WS_PORT: 4000
+      - NODE_ENV
+      - WS_PORT
+      - PORT=$API_PORT
     ports:
       - 3001:3000
       - 4000:4000
   
   ui:
-    build:
-      context: ui
-      dockerfile: Dockerfile
+    build: ./ui
     volumes:
       - ./ui:/ui
       - /ui/node_modules
     environment:
-      NODE_ENV: development
-      PORT: 3000
+      - NODE_ENV
+      - WS_PORT
+      - PORT=$UI_PORT
     ports:
       - 3000:3000
 
