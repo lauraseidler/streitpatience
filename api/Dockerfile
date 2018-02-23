@@ -1,13 +1,7 @@
 FROM node:8-alpine
 
-WORKDIR /api
-
 RUN apk add --no-cache git
 
-COPY package.json yarn.lock ./
+WORKDIR /api
 
-RUN yarn install
-
-COPY . .
-
-CMD ["yarn", "run", "dev"]
+CMD yarn install --network-concurrency 1 && yarn run dev
