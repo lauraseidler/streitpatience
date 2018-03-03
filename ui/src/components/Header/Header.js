@@ -9,7 +9,7 @@ const Wrapper = styled.header`
   color: rgba(255, 255, 255, 0.5);
   display: flex;
   justify-content: space-between;
-  padding: 5px 10px;
+  padding: 8px 15px;
 `;
 
 const Headline = styled.h1`

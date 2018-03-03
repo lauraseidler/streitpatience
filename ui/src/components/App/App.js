@@ -9,6 +9,7 @@ const Grid = styled.div`
   grid: auto 1fr / 1fr;
   grid-gap: 10px;
   height: 100vh;
+  padding: 10px;
 `;
 
 export default function App() {
