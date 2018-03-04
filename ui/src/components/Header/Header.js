@@ -29,7 +29,9 @@ const Header = props => (
       Play <TextHighlight>Streitpatience</TextHighlight> online
     </Headline>
 
-    {`${props.onlinePlayers} players online`}
+    {`${props.onlinePlayers} ${
+      props.onlinePlayers === 1 ? 'player' : 'players'
+    } online`}
 
     <HelpIcon />
   </Wrapper>
