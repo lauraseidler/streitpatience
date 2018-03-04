@@ -4,28 +4,28 @@ import styled from 'styled-components';
 
 import socket from '../../socket';
 import store from '../../redux/store';
-import Header from '../Header/Header';
+import { GRID_GAP } from '../../variables';
 import GameArea from '../GameArea/GameArea';
+import Header from '../Header/Header';
 
 const Grid = styled.div`
   display: grid;
   grid: auto 1fr / 1fr;
-  grid-gap: 10px;
+  grid-gap: ${GRID_GAP};
   height: 100vh;
   padding: 10px;
 `;
 
 class App extends Component {
-  componentDidMount() {
+  componentDidMount = () => {
     socket.init(store);
-  }
+  };
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     socket.disconnect();
-  }
+  };
 
-  render() {
-    return (
+  render = () => (
       <Provider store={store}>
         <Grid>
           <Header />
@@ -33,7 +33,6 @@ class App extends Component {
         </Grid>
       </Provider>
     );
-  }
 }
 
 export default App;

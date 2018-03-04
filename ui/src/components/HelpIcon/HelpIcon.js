@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { FONTS } from '../../variables';
+
 const Icon = styled.span`
   align-items: center;
   border: 2px solid currentColor;
@@ -9,13 +11,10 @@ const Icon = styled.span`
   display: flex;
   height: 30px;
   justify-content: center;
-  font-family: 'Bowlby One SC', cursive;
+  font-family: ${FONTS.DECO};
   padding-top: 2px;
   width: 30px;
 `;
 
-export default function HelpIcon() {
-  return (
-    <Icon title="Help is coming, hang tight!">?</Icon>
-  )
-}
+const HelpIcon = () => <Icon title="Help is coming, hang tight!">?</Icon>;
+export default HelpIcon;

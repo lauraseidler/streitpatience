@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SET_GAME_VIEW 1`] = `
+Object {
+  "gameView": "ABOUT",
+}
+`;
+
+exports[`SET_GAME_VIEW with illegal game view 1`] = `
+Object {
+  "gameView": "ACTION_BOARD",
+}
+`;
+
+exports[`SET_ONLINE_PLAYERS 1`] = `
+Object {
+  "onlinePlayers": 1,
+}
+`;

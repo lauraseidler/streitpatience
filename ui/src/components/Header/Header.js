@@ -3,32 +3,30 @@ import { connect } from 'react-redux';
 import { number } from 'prop-types';
 import styled from 'styled-components';
 
+import { COLORS, FONTS } from '../../variables';
 import HelpIcon from '../HelpIcon/HelpIcon';
+import TextHighlight from '../TextHighlight/TextHighlight';
 
 const Wrapper = styled.header`
   align-items: center;
-  background: #111;
-  color: rgba(255, 255, 255, 0.5);
+  background: ${COLORS.BLACK};
+  color: ${COLORS.FADE};
   display: flex;
   justify-content: space-between;
   padding: 8px 15px;
 `;
 
 const Headline = styled.h1`
-  font-family: 'Bowlby One SC', cursive;
+  font-family: ${FONTS.DECO};
   letter-spacing: 1px;
   margin: 0;
   padding: 8px 0 0;
 `;
 
-const Highlight = styled.span`
-  color: white;
-`;
-
 const Header = props => (
   <Wrapper>
     <Headline>
-      Play <Highlight>Streitpatience</Highlight> online
+      Play <TextHighlight>Streitpatience</TextHighlight> online
     </Headline>
 
     {`${props.onlinePlayers} players online`}
