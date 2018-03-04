@@ -11,10 +11,12 @@
     },
     "dependencies": {
         "express": "^4.16.2",
+        "redux": "^3.7.2",
         "socket.io": "^2.0.4"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "babel-preset-env": "^1.6.1",
         "nodemon": "^1.15.0"
     }

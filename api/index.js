@@ -1,29 +1,28 @@
 import express from 'express';
 import socketIO from 'socket.io';
 
+import actions, { setOnlinePlayers } from '../redux/actions';
+import store from '../redux/store';
+
 const port = process.env.PORT || 80;
 const wsPort = process.env.WS_PORT || 4000;
 
 const app = express();
-const io = socketIO();
+const io = socketIO(wsPort);
 
-app.use(express.static(`${__dirname}/ui`))
-
-app.get('/api/hello', (req, res) => {
-    res.json({ message: 'Hello World' });
-});
+app.use(express.static(`${__dirname}/ui`));
 
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+  console.log(`Server listening on port ${port}`);
+  console.log(`Socket.IO server listening on port ${wsPort}`);
 });
 
 io.on('connection', client => {
-    client.on('subscribeToTimer', interval => {
-        console.log(`Client subscribed to timer with interval ${interval}`);
+  store.dispatch(setOnlinePlayers(store.getState().onlinePlayers + 1));
+  io.sockets.emit(actions.SET_ONLINE_PLAYERS, store.getState().onlinePlayers);
 
-        setInterval(() => client.emit('timer', new Date()), interval);
-    });
+  client.on('disconnect', () => {
+    store.dispatch(setOnlinePlayers(store.getState().onlinePlayers - 1));
+    io.sockets.emit(actions.SET_ONLINE_PLAYERS, store.getState().onlinePlayers);
+  });
 });
-
-io.listen(wsPort);
-console.log(`Socket.IO server listening on port ${wsPort}`);

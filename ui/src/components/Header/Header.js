@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { number } from 'prop-types';
 import styled from 'styled-components';
 
 import HelpIcon from '../HelpIcon/HelpIcon';
@@ -23,14 +25,24 @@ const Highlight = styled.span`
   color: white;
 `;
 
-export default function Header() {
-  return (
-    <Wrapper>
-      <Headline>
-        Play <Highlight>Streitpatience</Highlight> online
-      </Headline>
+const Header = props => (
+  <Wrapper>
+    <Headline>
+      Play <Highlight>Streitpatience</Highlight> online
+    </Headline>
 
-      <HelpIcon />
-    </Wrapper>
-  );
-}
+    {`${props.onlinePlayers} players online`}
+
+    <HelpIcon />
+  </Wrapper>
+);
+
+Header.propTypes = {
+  onlinePlayers: number.isRequired
+};
+
+const mapStateToProps = state => ({
+  onlinePlayers: state.onlinePlayers
+});
+
+export default connect(mapStateToProps)(Header);

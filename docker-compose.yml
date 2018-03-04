@@ -11,6 +11,9 @@ services:
     volumes:
       - ./api:/api
       - ./ui/build:/api/ui
+      - ./ui/src/redux:/redux
+      - ./api/.babelrc:/redux/.babelrc
+      - ./api/node_modules:/redux/node_modules
     environment:
       - NODE_ENV
       - WS_PORT
