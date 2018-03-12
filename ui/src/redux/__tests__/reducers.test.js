@@ -57,3 +57,16 @@ test('ABORT_RECONNECT', () => {
 
   expect(state).toMatchSnapshot();
 });
+
+test('SET_GAMES', () => {
+  const state = reducers(
+    { games: [] },
+    {
+      type: 'SET_GAMES',
+      payload: [
+        '48b12ddacf0f41b0b8cfbd3c4962609cda7dcaa87ddf983494f8633df7c885ca'
+      ]
+    }
+  );
+  expect(state).toMatchSnapshot();
+});

@@ -5,13 +5,15 @@ import {
   SET_GAME_VIEW,
   SET_CURRENT_GAME,
   PROMPT_RECONNECT,
-  ABORT_RECONNECT
+  ABORT_RECONNECT,
+  SET_GAMES
 } from './action-types';
 
 const DEFAULT_STATE = {
   onlinePlayers: 0,
   gameView: GAME_VIEWS.ACTION_BOARD,
-  currentGame: null
+  currentGame: null,
+  games: []
 };
 
 const setOnlinePlayers = (state, action) => ({
@@ -57,6 +59,11 @@ const abortReconnect = state => {
   };
 };
 
+const setGames = (state, action) => ({
+  ...state,
+  games: action.payload
+});
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -69,6 +76,8 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return promptReconnect(state);
     case ABORT_RECONNECT:
       return abortReconnect(state);
+    case SET_GAMES:
+      return setGames(state, action);
     default:
       return state;
   }

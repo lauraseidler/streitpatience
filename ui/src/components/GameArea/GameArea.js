@@ -10,6 +10,7 @@ import RulesContent from '../RulesContent/RulesContent';
 import TextArea from '../TextArea/TextArea';
 import Game from '../Game/Game';
 import ReconnectPrompt from '../ReconnectPrompt/ReconnectPrompt';
+import JoinGame from '../JoinGame/JoinGame';
 
 const GameArea = props => {
   switch (props.gameView) {
@@ -23,6 +24,12 @@ const GameArea = props => {
       return <ActionBoard />;
     case GAME_VIEWS.GAME:
       return <Game />;
+    case GAME_VIEWS.JOIN_GAME:
+      return (
+        <TextArea>
+          <JoinGame />
+        </TextArea>
+      );
     case GAME_VIEWS.NEW_GAME:
       return (
         <TextArea>

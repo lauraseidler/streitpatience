@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, string } from 'prop-types';
 import styled from 'styled-components';
+import sha256 from 'js-sha256';
 
 import socket from '../../socket';
 import { FONTS, COLORS, GRID_GAP } from '../../variables';
@@ -23,7 +24,7 @@ const Wrapper = styled.div`
 `;
 
 class PlayerInfo extends Component {
-  playerId = socket.getId();
+  playerId = sha256(socket.getId());
 
   playerName = () => {
     switch (this.props.playerType) {

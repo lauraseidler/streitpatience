@@ -23,6 +23,10 @@ const newGame = () => {
   emit('newGame');
 };
 
+const joinGame = gameId => {
+  emit('joinGame', gameId);
+};
+
 const getId = () => socket.id;
 
 const reconnect = () => {
@@ -57,6 +61,7 @@ export default {
   emit,
   disconnect,
   newGame,
+  joinGame,
   getId,
   reconnect
 };

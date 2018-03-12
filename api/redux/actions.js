@@ -1,7 +1,8 @@
 import {
   SET_ONLINE_PLAYERS,
   CREATE_NEW_GAME,
-  RECONNECT_PLAYER
+  RECONNECT_PLAYER,
+  ADD_PLAYER
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -14,4 +15,8 @@ export function createNewGame(gameId, playerId) {
 
 export function reconnectPlayer(gameId, playerId, newPlayerId) {
   return { type: RECONNECT_PLAYER, payload: { gameId, playerId, newPlayerId } };
+}
+
+export function addPlayer(gameId, playerId) {
+  return { type: ADD_PLAYER, payload: { gameId, playerId } };
 }
