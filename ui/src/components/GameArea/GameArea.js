@@ -9,6 +9,7 @@ import NewGame from '../NewGame/NewGame';
 import RulesContent from '../RulesContent/RulesContent';
 import TextArea from '../TextArea/TextArea';
 import Game from '../Game/Game';
+import ReconnectPrompt from '../ReconnectPrompt/ReconnectPrompt';
 
 const GameArea = props => {
   switch (props.gameView) {
@@ -28,6 +29,8 @@ const GameArea = props => {
           <NewGame />
         </TextArea>
       );
+    case GAME_VIEWS.RECONNECT_PROMPT:
+      return <ReconnectPrompt />;
     case GAME_VIEWS.RULES:
       return (
         <TextArea>

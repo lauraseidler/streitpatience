@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 `;
 
 class PlayerInfo extends Component {
-  playerId = socket.getID();
+  playerId = socket.getId();
 
   playerName = () => {
     switch (this.props.playerType) {

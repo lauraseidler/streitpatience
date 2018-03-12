@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { COLORS, FONTS } from '../../variables';
 
 const TextHeadline = styled.h2`
-  color: ${COLORS.FADE};
+  color: ${props => (props.faded ? COLORS.FADE : COLORS.WHITE)};
   font-family: ${FONTS.DECO};
   font-size: 2.5rem;
   font-weight: normal;

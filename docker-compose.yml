@@ -16,6 +16,7 @@ services:
       - ./api/.babelrc:/redux/.babelrc
       - ./api/node_modules:/redux/node_modules
       - ./ui/src/variables.js:/variables.js
+      - ./ui/src/socket.js:/socket.js
       - ./api/.babelrc:/.babelrc
       - ./api/node_modules:/node_modules
     environment:
