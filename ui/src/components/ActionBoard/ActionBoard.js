@@ -13,7 +13,7 @@ const Grid = styled.div`
 
 const ActionBoard = () => (
   <Grid>
-    <ActionButton>New game</ActionButton>
+    <ActionButton view={GAME_VIEWS.NEW_GAME}>New game</ActionButton>
     <ActionButton bg={COLORS.GREEN_LIGHT}>Join game</ActionButton>
     <ActionButton bg={COLORS.GREEN_LIGHT} view={GAME_VIEWS.RULES}>
       Rules

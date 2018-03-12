@@ -26,13 +26,13 @@ class App extends Component {
   };
 
   render = () => (
-      <Provider store={store}>
-        <Grid>
-          <Header />
-          <GameArea />
-        </Grid>
-      </Provider>
-    );
+    <Provider store={store}>
+      <Grid>
+        <Header />
+        <GameArea />
+      </Grid>
+    </Provider>
+  );
 }
 
 export default App;

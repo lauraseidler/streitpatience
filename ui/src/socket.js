@@ -16,8 +16,16 @@ const disconnect = () => {
   emit('disconnect');
 };
 
+const newGame = () => {
+  emit('newGame');
+};
+
+const getID = () => socket.id;
+
 export default {
   init,
   emit,
-  disconnect
+  disconnect,
+  newGame,
+  getID
 };

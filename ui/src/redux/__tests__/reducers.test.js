@@ -26,3 +26,39 @@ test('SET_GAME_VIEW with illegal game view', () => {
 
   expect(state).toMatchSnapshot();
 });
+
+test('CREATE_NEW_GAME', () => {
+  const state = reducers(
+    {
+      games: {}
+    },
+    { type: 'CREATE_NEW_GAME', payload: '7gg1n2smCT2kkiwaAAAA' }
+  );
+
+  expect(state).toEqual({
+    games: {
+      '7gg1n2smCT2kkiwaAAAA': {
+        id: '7gg1n2smCT2kkiwaAAAA',
+        players: ['7gg1n2smCT2kkiwaAAAA']
+      }
+    }
+  });
+});
+
+test('START_PLAYER_GAME for first player', () => {
+  const state = reducers(
+    { gameView: 'NEW_GAME', playerGame: null },
+    {
+      type: 'START_PLAYER_GAME',
+      payload: { id: '7gg1n2smCT2kkiwaAAAA', players: ['7gg1n2smCT2kkiwaAAAA'] }
+    }
+  );
+
+  expect(state).toEqual({
+    gameView: 'GAME',
+    playerGame: {
+      id: '7gg1n2smCT2kkiwaAAAA',
+      players: ['7gg1n2smCT2kkiwaAAAA']
+    }
+  });
+});

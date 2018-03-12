@@ -16,5 +16,7 @@ export const GRID_GAP = '10px';
 export const GAME_VIEWS = {
   ABOUT: 'ABOUT',
   ACTION_BOARD: 'ACTION_BOARD',
+  GAME: 'GAME',
+  NEW_GAME: 'NEW_GAME',
   RULES: 'RULES'
 };

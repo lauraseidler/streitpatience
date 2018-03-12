@@ -1,7 +1,7 @@
 import express from 'express';
 import socketIO from 'socket.io';
 
-import actions, { setOnlinePlayers } from '../redux/actions';
+import actions, { setOnlinePlayers, createNewGame } from '../redux/actions';
 import store from '../redux/store';
 
 const port = process.env.PORT || 80;
@@ -24,5 +24,10 @@ io.on('connection', client => {
   client.on('disconnect', () => {
     store.dispatch(setOnlinePlayers(store.getState().onlinePlayers - 1));
     io.sockets.emit(actions.SET_ONLINE_PLAYERS, store.getState().onlinePlayers);
+  });
+
+  client.on('newGame', () => {
+    store.dispatch(createNewGame(client.id));
+    client.emit(actions.START_PLAYER_GAME, store.getState().games[client.id]);
   });
 });

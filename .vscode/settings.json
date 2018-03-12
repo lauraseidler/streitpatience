@@ -1,5 +1,8 @@
 {
   "editor.formatOnSave": true,
+  "emmet.syntaxProfiles": {
+    "javascript": "jsx"
+  },
   "javascript.format.enable": false,
   "javascript.validate.enable": false,
   "prettier.eslintIntegration": true,
