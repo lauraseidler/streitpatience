@@ -1,5 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ABORT_RECONNECT 1`] = `
+Object {
+  "gameView": "ACTION_BOARD",
+}
+`;
+
+exports[`PROMPT_RECONNECT 1`] = `
+Object {
+  "gameView": "RECONNECT_PROMPT",
+}
+`;
+
+exports[`SET_CURRENT_GAME for first player 1`] = `
+Object {
+  "currentGame": Object {
+    "id": "7gg1n2smCT2kkiwaAAAA",
+    "players": Array [
+      "7gg1n2smCT2kkiwaAAAA",
+    ],
+  },
+  "gameView": "GAME",
+}
+`;
+
 exports[`SET_GAME_VIEW 1`] = `
 Object {
   "gameView": "ABOUT",

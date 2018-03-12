@@ -12,11 +12,7 @@ services:
       - ./api:/api
       - ./ui/build:/api/ui
       # redux share
-      - ./ui/src/redux:/redux
-      - ./api/.babelrc:/redux/.babelrc
-      - ./api/node_modules:/redux/node_modules
-      - ./ui/src/variables.js:/variables.js
-      - ./ui/src/socket.js:/socket.js
+      - ./ui/src/redux/action-types.js:/api/ui-action-types.js
       - ./api/.babelrc:/.babelrc
       - ./api/node_modules:/node_modules
     environment:

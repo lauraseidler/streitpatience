@@ -4,8 +4,8 @@ import styled from 'styled-components';
 import { func } from 'prop-types';
 
 import socket from '../../socket';
-import { setGameView, abortReconnect } from '../../redux/actions';
-import { GRID_GAP, COLORS, GAME_VIEWS } from '../../variables';
+import { abortReconnect } from '../../redux/actions';
+import { GRID_GAP, COLORS } from '../../variables';
 import TextHeadline from '../TextHeadline/TextHeadline';
 import BigButton from '../BigButton/BigButton';
 
@@ -46,7 +46,6 @@ ReconnectPrompt.propTypes = {
 const mapDispatchToProps = dispatch => ({
   abortReconnect() {
     dispatch(abortReconnect());
-    dispatch(setGameView(GAME_VIEWS.ACTION_BOARD));
   }
 });
 

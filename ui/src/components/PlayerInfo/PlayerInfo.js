@@ -53,7 +53,7 @@ PlayerInfo.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  players: state.playerGame.players
+  players: state.currentGame.players
 });
 
 export default connect(mapStateToProps)(PlayerInfo);

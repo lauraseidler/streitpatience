@@ -2,12 +2,13 @@ import express from 'express';
 import sha256 from 'js-sha256';
 import socketIO from 'socket.io';
 
-import actions, {
+import {
   setOnlinePlayers,
   createNewGame,
   reconnectPlayer
-} from '../redux/actions';
-import store from '../redux/store';
+} from './redux/actions';
+import store from './redux/store';
+import uiActionTypes from './ui-action-types.js';
 
 const port = process.env.PORT || 80;
 const wsPort = process.env.WS_PORT || 4000;
@@ -24,11 +25,17 @@ app.listen(port, () => {
 
 io.on('connection', client => {
   store.dispatch(setOnlinePlayers(store.getState().onlinePlayers + 1));
-  io.sockets.emit(actions.SET_ONLINE_PLAYERS, store.getState().onlinePlayers);
+  io.sockets.emit(
+    uiActionTypes.SET_ONLINE_PLAYERS,
+    store.getState().onlinePlayers
+  );
 
   client.on('disconnect', () => {
     store.dispatch(setOnlinePlayers(store.getState().onlinePlayers - 1));
-    io.sockets.emit(actions.SET_ONLINE_PLAYERS, store.getState().onlinePlayers);
+    io.sockets.emit(
+      uiActionTypes.SET_ONLINE_PLAYERS,
+      store.getState().onlinePlayers
+    );
   });
 
   client.on('newGame', () => {
@@ -39,7 +46,7 @@ io.on('connection', client => {
     const playerId = sha256(client.id);
 
     store.dispatch(createNewGame(gameId, playerId));
-    client.emit(actions.SET_PLAYER_GAME, store.getState().games[gameId]);
+    client.emit(uiActionTypes.SET_CURRENT_GAME, store.getState().games[gameId]);
   });
 
   client.on('checkToReconnect', ({ gameId, clientId }) => {
@@ -48,7 +55,7 @@ io.on('connection', client => {
     const prevGame = store.getState().games[gameId];
 
     if (prevGame && prevGame.players.indexOf(playerId) > -1) {
-      client.emit(actions.PROMPT_RECONNECT);
+      client.emit(uiActionTypes.PROMPT_RECONNECT);
     }
   });
 
@@ -60,7 +67,10 @@ io.on('connection', client => {
     if (prevGame && prevGame.players.indexOf(playerId) > -1) {
       const newPlayerId = sha256(client.id);
       store.dispatch(reconnectPlayer(gameId, playerId, newPlayerId));
-      client.emit(actions.SET_PLAYER_GAME, store.getState().games[gameId]);
+      client.emit(
+        uiActionTypes.SET_CURRENT_GAME,
+        store.getState().games[gameId]
+      );
     }
   });
 });

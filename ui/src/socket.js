@@ -1,6 +1,6 @@
 import openSocket from 'socket.io-client';
 
-import actions from './redux/actions';
+import actionTypes from './redux/action-types';
 
 const socket = openSocket(`http://localhost:${process.env.WS_PORT || 4000}`);
 
@@ -8,7 +8,7 @@ let prevSocketClientId;
 let prevGameId;
 
 const init = store => {
-  Object.keys(actions).forEach(type =>
+  Object.keys(actionTypes).forEach(type =>
     socket.on(type, payload => store.dispatch({ type, payload }))
   );
 };

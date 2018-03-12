@@ -1,3 +1,4 @@
+import 'jest-localstorage-mock';
 import reducers from '../reducers';
 
 test('SET_ONLINE_PLAYERS', () => {
@@ -27,38 +28,32 @@ test('SET_GAME_VIEW with illegal game view', () => {
   expect(state).toMatchSnapshot();
 });
 
-test('CREATE_NEW_GAME', () => {
+test('SET_CURRENT_GAME for first player', () => {
   const state = reducers(
+    { gameView: 'NEW_GAME', currentGame: null },
     {
-      games: {}
-    },
-    { type: 'CREATE_NEW_GAME', payload: '7gg1n2smCT2kkiwaAAAA' }
-  );
-
-  expect(state).toEqual({
-    games: {
-      '7gg1n2smCT2kkiwaAAAA': {
-        id: '7gg1n2smCT2kkiwaAAAA',
-        players: ['7gg1n2smCT2kkiwaAAAA']
-      }
-    }
-  });
-});
-
-test('START_PLAYER_GAME for first player', () => {
-  const state = reducers(
-    { gameView: 'NEW_GAME', playerGame: null },
-    {
-      type: 'START_PLAYER_GAME',
+      type: 'SET_CURRENT_GAME',
       payload: { id: '7gg1n2smCT2kkiwaAAAA', players: ['7gg1n2smCT2kkiwaAAAA'] }
     }
   );
 
-  expect(state).toEqual({
-    gameView: 'GAME',
-    playerGame: {
-      id: '7gg1n2smCT2kkiwaAAAA',
-      players: ['7gg1n2smCT2kkiwaAAAA']
-    }
-  });
+  expect(state).toMatchSnapshot();
+});
+
+test('PROMPT_RECONNECT', () => {
+  const state = reducers(
+    { gameView: 'ACTION_BOARD' },
+    { type: 'PROMPT_RECONNECT' }
+  );
+
+  expect(state).toMatchSnapshot();
+});
+
+test('ABORT_RECONNECT', () => {
+  const state = reducers(
+    { gameView: 'RECONNECT_PROMPT' },
+    { type: 'ABORT_RECONNECT' }
+  );
+
+  expect(state).toMatchSnapshot();
 });
