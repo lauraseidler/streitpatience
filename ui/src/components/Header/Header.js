@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { number } from 'prop-types';
+import { number, string } from 'prop-types';
 import styled from 'styled-components';
 
 import { COLORS, FONTS } from '../../variables';
@@ -29,20 +29,26 @@ const Header = props => (
       Play <TextHighlight>Streitpatience</TextHighlight> online
     </Headline>
 
-    {`${props.onlinePlayers} ${
-      props.onlinePlayers === 1 ? 'player' : 'players'
-    } online`}
+    <span>Hello, {props.username}!</span>
+
+    <span>
+      {`${props.onlinePlayers} ${
+        props.onlinePlayers === 1 ? 'player' : 'players'
+      } online`}
+    </span>
 
     <HelpIcon />
   </Wrapper>
 );
 
 Header.propTypes = {
-  onlinePlayers: number.isRequired
+  onlinePlayers: number.isRequired,
+  username: string.isRequired
 };
 
 const mapStateToProps = state => ({
-  onlinePlayers: state.onlinePlayers
+  onlinePlayers: state.onlinePlayers,
+  username: state.username
 });
 
 export default connect(mapStateToProps)(Header);

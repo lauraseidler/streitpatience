@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, string } from 'prop-types';
+import { arrayOf, shape, string } from 'prop-types';
 import styled from 'styled-components';
 import sha256 from 'js-sha256';
 
@@ -36,7 +36,7 @@ class PlayerInfo extends Component {
           return 'Waiting for player...';
         }
 
-        return this.props.players.find(p => p !== this.playerId);
+        return this.props.players.find(p => p.id !== this.playerId).username;
 
       default:
         return null;
@@ -49,7 +49,12 @@ class PlayerInfo extends Component {
 }
 
 PlayerInfo.propTypes = {
-  players: arrayOf(string).isRequired,
+  players: arrayOf(
+    shape({
+      id: string.isRequired,
+      username: string.isRequired
+    })
+  ).isRequired,
   playerType: string.isRequired
 };
 

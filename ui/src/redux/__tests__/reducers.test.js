@@ -70,3 +70,12 @@ test('SET_GAMES', () => {
   );
   expect(state).toMatchSnapshot();
 });
+
+test('SET_USERNAME', () => {
+  const state = reducers(
+    { username: 'user349024' },
+    { type: 'SET_USERNAME', payload: 'Laura' }
+  );
+
+  expect(state).toMatchSnapshot();
+});

@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { COLORS, FONTS } from '../../variables';
 
 const Button = styled.button`
-  background: ${COLORS.GREEN_DARK};
-  border: none;
+  background: none;
+  border: 1px solid ${COLORS.FADE};
   color: ${COLORS.FADE};
   cursor: pointer;
   font-family: ${FONTS.DECO};
@@ -11,7 +11,9 @@ const Button = styled.button`
   margin-top: 5px;
   padding: 10px;
 
-  &:hover {
+  &:hover,
+  &:focus {
+    border-color: ${COLORS.WHITE};
     color: ${COLORS.WHITE};
   }
 `;

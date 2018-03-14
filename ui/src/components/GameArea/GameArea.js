@@ -11,6 +11,7 @@ import TextArea from '../TextArea/TextArea';
 import Game from '../Game/Game';
 import ReconnectPrompt from '../ReconnectPrompt/ReconnectPrompt';
 import JoinGame from '../JoinGame/JoinGame';
+import UsernameSetting from '../UsernameSetting/UsernameSetting';
 
 const GameArea = props => {
   switch (props.gameView) {
@@ -42,6 +43,12 @@ const GameArea = props => {
       return (
         <TextArea>
           <RulesContent />
+        </TextArea>
+      );
+    case GAME_VIEWS.USERNAME_SETTING:
+      return (
+        <TextArea>
+          <UsernameSetting />
         </TextArea>
       );
     default:

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, string } from 'prop-types';
+import { arrayOf, shape, string } from 'prop-types';
 
 import socket from '../../socket';
 import TextHeadline from '../TextHeadline/TextHeadline';
@@ -15,10 +15,10 @@ const JoinGame = props => (
     <table>
       <tbody>
         {props.games.map(game => (
-          <tr key={game}>
-            <td>{game}</td>
+          <tr key={game.id}>
+            <td>{game.name}</td>
             <td>
-              <Button onClick={() => socket.joinGame(game)}>Join</Button>
+              <Button onClick={() => socket.joinGame(game.id)}>Join</Button>
             </td>
           </tr>
         ))}
@@ -28,7 +28,12 @@ const JoinGame = props => (
 );
 
 JoinGame.propTypes = {
-  games: arrayOf(string).isRequired
+  games: arrayOf(
+    shape({
+      id: string.isRequired,
+      name: string.isRequired
+    })
+  ).isRequired
 };
 
 const mapStateToProps = state => ({

@@ -4,7 +4,8 @@ import {
   SET_CURRENT_GAME,
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
-  SET_GAMES
+  SET_GAMES,
+  SET_USERNAME
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -29,4 +30,8 @@ export function abortReconnect() {
 
 export function setGames(games) {
   return { type: SET_GAMES, payload: games };
+}
+
+export function setUsername(username) {
+  return { type: SET_USERNAME, payload: username };
 }

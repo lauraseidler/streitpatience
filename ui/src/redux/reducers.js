@@ -6,14 +6,16 @@ import {
   SET_CURRENT_GAME,
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
-  SET_GAMES
+  SET_GAMES,
+  SET_USERNAME
 } from './action-types';
 
 const DEFAULT_STATE = {
-  onlinePlayers: 0,
-  gameView: GAME_VIEWS.ACTION_BOARD,
   currentGame: null,
-  games: []
+  games: [],
+  gameView: GAME_VIEWS.ACTION_BOARD,
+  onlinePlayers: 0,
+  username: null
 };
 
 const setOnlinePlayers = (state, action) => ({
@@ -64,6 +66,15 @@ const setGames = (state, action) => ({
   games: action.payload
 });
 
+const setUsername = (state, action) => {
+  localStorage.setItem('username', action.payload);
+
+  return {
+    ...state,
+    username: action.payload
+  };
+};
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -78,6 +89,8 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return abortReconnect(state);
     case SET_GAMES:
       return setGames(state, action);
+    case SET_USERNAME:
+      return setUsername(state, action);
     default:
       return state;
   }

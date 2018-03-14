@@ -4,6 +4,7 @@ export const SET_CURRENT_GAME = 'SET_CURRENT_GAME';
 export const PROMPT_RECONNECT = 'PROMPT_RECONNECT';
 export const ABORT_RECONNECT = 'ABORT_RECONNECT';
 export const SET_GAMES = 'SET_GAMES';
+export const SET_USERNAME = 'SET_USERNAME';
 
 export default {
   SET_ONLINE_PLAYERS,
@@ -11,5 +12,6 @@ export default {
   SET_CURRENT_GAME,
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
-  SET_GAMES
+  SET_GAMES,
+  SET_USERNAME
 };

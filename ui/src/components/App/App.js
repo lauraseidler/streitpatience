@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { func } from 'prop-types';
 
 import socket from '../../socket';
-import store from '../../redux/store';
+import { setUsername } from '../../redux/actions';
 import { GRID_GAP } from '../../variables';
 import GameArea from '../GameArea/GameArea';
 import Header from '../Header/Header';
@@ -17,8 +18,16 @@ const Grid = styled.div`
 `;
 
 class App extends Component {
+  componentWillMount = () => {
+    const username =
+      localStorage.getItem('username') ||
+      `user${Math.floor(Math.random() * 1000000)}`;
+
+    this.props.setUsername(username);
+  };
+
   componentDidMount = () => {
-    socket.init(store);
+    socket.init();
   };
 
   componentWillUnmount = () => {
@@ -26,13 +35,21 @@ class App extends Component {
   };
 
   render = () => (
-    <Provider store={store}>
-      <Grid>
-        <Header />
-        <GameArea />
-      </Grid>
-    </Provider>
+    <Grid>
+      <Header />
+      <GameArea />
+    </Grid>
   );
 }
 
-export default App;
+App.propTypes = {
+  setUsername: func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  setUsername(username) {
+    dispatch(setUsername(username));
+  }
+});
+
+export default connect(() => ({}), mapDispatchToProps)(App);

@@ -16,14 +16,20 @@ const setOnlinePlayers = (state, action) => ({
   onlinePlayers: action.payload
 });
 
-const createNewGame = (state, { payload: { gameId, playerId } }) => ({
+const createNewGame = (state, { payload: { gameId, playerId, username } }) => ({
   ...state,
-  games: [...state.games, gameId],
+  games: [...state.games, { id: gameId, name: `Game by ${username}` }],
   gameDetails: {
     ...state.gameDetails,
     [gameId]: {
       id: gameId,
-      players: [playerId]
+      name: `Game by ${username}`,
+      players: [
+        {
+          id: playerId,
+          username
+        }
+      ]
     }
   }
 });
@@ -44,7 +50,7 @@ const reconnectPlayer = (
   }
 });
 
-const addPlayer = (state, { payload: { gameId, playerId } }) => {
+const addPlayer = (state, { payload: { gameId, playerId, username } }) => {
   const game = state.gameDetails[gameId];
 
   if (game.players.length > 1) {
@@ -53,12 +59,18 @@ const addPlayer = (state, { payload: { gameId, playerId } }) => {
 
   return {
     ...state,
-    games: state.games.filter(g => g !== gameId),
+    games: state.games.filter(g => g.id !== gameId),
     gameDetails: {
       ...state.gameDetails,
       [gameId]: {
         ...state.gameDetails[gameId],
-        players: [...state.gameDetails[gameId].players, playerId]
+        players: [
+          ...state.gameDetails[gameId].players,
+          {
+            id: playerId,
+            username
+          }
+        ]
       }
     }
   };

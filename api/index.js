@@ -43,14 +43,14 @@ io.on('connection', client => {
     );
   });
 
-  client.on('newGame', () => {
+  client.on('newGame', username => {
     // unique gameId from timestamp and client ID
     const gameId = sha256(Date.now() + client.id);
 
     // hashed player ID from client ID
     const playerId = sha256(client.id);
 
-    store.dispatch(createNewGame(gameId, playerId));
+    store.dispatch(createNewGame(gameId, playerId, username));
 
     client.join(gameId);
 
@@ -62,7 +62,7 @@ io.on('connection', client => {
     io.sockets.emit(uiActionTypes.SET_GAMES, store.getState().games);
   });
 
-  client.on('joinGame', gameId => {
+  client.on('joinGame', ({ gameId, username }) => {
     let game = store.getState().gameDetails[gameId];
 
     if (!game) {
@@ -71,11 +71,11 @@ io.on('connection', client => {
 
     const playerId = sha256(client.id);
 
-    store.dispatch(addPlayer(gameId, playerId));
+    store.dispatch(addPlayer(gameId, playerId, username));
 
     game = store.getState().gameDetails[gameId];
 
-    if (game.players.indexOf(playerId) > -1) {
+    if (game.players.map(p => p.id).indexOf(playerId) > -1) {
       client.join(gameId);
 
       io
@@ -94,7 +94,7 @@ io.on('connection', client => {
 
     const prevGame = store.getState().gameDetails[gameId];
 
-    if (prevGame && prevGame.players.indexOf(playerId) > -1) {
+    if (prevGame && prevGame.players.map(p => p.id).indexOf(playerId) > -1) {
       client.emit(uiActionTypes.PROMPT_RECONNECT);
     }
   });
@@ -104,7 +104,7 @@ io.on('connection', client => {
 
     const prevGame = store.getState().gameDetails[gameId];
 
-    if (prevGame && prevGame.players.indexOf(playerId) > -1) {
+    if (prevGame && prevGame.players.map(p => p.id).indexOf(playerId) > -1) {
       const newPlayerId = sha256(client.id);
 
       store.dispatch(reconnectPlayer(gameId, playerId, newPlayerId));

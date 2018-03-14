@@ -1,13 +1,14 @@
 import openSocket from 'socket.io-client';
 
 import actionTypes from './redux/action-types';
+import store from './redux/store';
 
 const socket = openSocket(`http://localhost:${process.env.WS_PORT || 4000}`);
 
 let prevSocketClientId;
 let prevGameId;
 
-const init = store => {
+const init = () => {
   Object.keys(actionTypes).forEach(type =>
     socket.on(type, payload => store.dispatch({ type, payload }))
   );
@@ -20,11 +21,12 @@ const disconnect = () => {
 };
 
 const newGame = () => {
-  emit('newGame');
+  emit('newGame', store.getState().username);
 };
 
 const joinGame = gameId => {
-  emit('joinGame', gameId);
+  console.log(store.getState().username);
+  emit('joinGame', { gameId, username: store.getState().username });
 };
 
 const getId = () => socket.id;

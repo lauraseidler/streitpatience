@@ -19,6 +19,12 @@ const FullScrollContainer = styled.div`
   overflow: auto;
   padding: 0 ${GRID_GAP} ${GRID_GAP};
   text-align: center;
+
+  p {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
+  }
 `;
 
 const TextArea = props => (
