@@ -25,7 +25,6 @@ const newGame = () => {
 };
 
 const joinGame = gameId => {
-  console.log(store.getState().username);
   emit('joinGame', { gameId, username: store.getState().username });
 };
 
@@ -36,7 +35,7 @@ const reconnect = () => {
     return;
   }
 
-  socket.emit('reconnectPlayer', {
+  socket.emit('reconnectGame', {
     gameId: prevGameId,
     clientId: prevSocketClientId
   });
@@ -52,9 +51,10 @@ socket.on('connect', () => {
     return;
   }
 
-  emit('checkToReconnect', {
+  emit('reconnectGame', {
     gameId: prevGameId,
-    clientId: prevSocketClientId
+    clientId: prevSocketClientId,
+    checkOnly: true
   });
 });
 

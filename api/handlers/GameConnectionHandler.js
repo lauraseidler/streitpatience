@@ -1,0 +1,116 @@
+import { sha256 } from 'js-sha256';
+
+import BaseHandler from './BaseHandler';
+import { createNewGame, addPlayer, reconnectPlayer } from '../redux/actions';
+import store from '../redux/store';
+import uiActionTypes from '../ui-action-types';
+
+class GameConnectionHandler extends BaseHandler {
+  newGame(username) {
+    this.playerId = this._generatePlayerId();
+
+    // don't let players create more than one game
+    if (this._isPlayerInAnyGame()) {
+      return;
+    }
+
+    this.gameId = this._generateGameId();
+
+    store.dispatch(createNewGame(this.gameId, this.playerId, username));
+
+    this._joinGameRoom();
+    this._updateGameForRoom();
+    this._updateGameListForAll();
+  }
+
+  joinGame({ gameId, username }) {
+    this.playerId = this._generatePlayerId();
+
+    // don't let players be in more than one game
+    if (this._isPlayerInAnyGame()) {
+      return;
+    }
+
+    this.gameId = gameId;
+
+    store.dispatch(addPlayer(this.gameId, this.playerId, username));
+
+    // reset if for some reason player could not be added to game
+    // TODO: should probably send an error message here...
+    if (!this._isPlayerInCorrectGame()) {
+      this.gameId = null;
+      return;
+    }
+
+    this._joinGameRoom();
+    this._updateGameForRoom();
+    this._updateGameListForAll();
+  }
+
+  reconnectGame({ gameId, clientId, checkOnly = false }) {
+    this.playerId = this._generatePlayerId(clientId);
+    this.gameId = gameId;
+
+    if (!this._isPlayerInCorrectGame()) {
+      return;
+    }
+
+    if (checkOnly) {
+      this.client.emit(uiActionTypes.PROMPT_RECONNECT);
+      return;
+    }
+
+    const oldPlayerId = this.playerId;
+    this.playerId = this._generatePlayerId();
+
+    store.dispatch(reconnectPlayer(this.gameId, oldPlayerId, this.playerId));
+
+    this._joinGameRoom();
+    this._updateGameForRoom();
+  }
+
+  _generateGameId() {
+    return sha256(Date.now() + this.client.id);
+  }
+
+  _generatePlayerId(clientId) {
+    return sha256(clientId || this.client.id);
+  }
+
+  _isPlayerInAnyGame() {
+    return (
+      Object.values(store.getState().gameDetails).findIndex(
+        g => g.players.map(p => p.id).indexOf(this.playerId) > -1
+      ) > -1
+    );
+  }
+
+  _isPlayerInCorrectGame() {
+    const game = store.getState().gameDetails[this.gameId];
+
+    if (!game) {
+      return false;
+    }
+
+    return game.players.map(p => p.id).indexOf(this.playerId) > -1;
+  }
+
+  _joinGameRoom() {
+    this.client.join(this.gameId);
+  }
+
+  _updateGameForRoom() {
+    this.io
+      .to(this.gameId)
+      .emit(
+        uiActionTypes.SET_CURRENT_GAME,
+        store.getState().gameDetails[this.gameId]
+      );
+  }
+
+  _updateGameListForAll() {
+    this.io.sockets.emit(uiActionTypes.SET_GAMES, store.getState().games);
+  }
+}
+
+export default GameConnectionHandler;

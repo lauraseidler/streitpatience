@@ -44,7 +44,7 @@ const reconnectPlayer = (
     [gameId]: {
       ...state.gameDetails[gameId],
       players: state.gameDetails[gameId].players.map(
-        p => (p === playerId ? newPlayerId : p)
+        p => (p.id === playerId ? { id: newPlayerId, username: p.username } : p)
       )
     }
   }
@@ -53,7 +53,7 @@ const reconnectPlayer = (
 const addPlayer = (state, { payload: { gameId, playerId, username } }) => {
   const game = state.gameDetails[gameId];
 
-  if (game.players.length > 1) {
+  if (!game || game.players.length !== 1) {
     return state;
   }
 
