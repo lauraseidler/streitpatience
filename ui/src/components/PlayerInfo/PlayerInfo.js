@@ -31,12 +31,19 @@ class PlayerInfo extends Component {
       case PLAYER_TYPES.SELF:
         return 'You';
 
-      case PLAYER_TYPES.OPPONENT:
+      case PLAYER_TYPES.OPPONENT: {
         if (this.props.players.length < 2) {
-          return 'Waiting for player...';
+          return 'Waiting for opponent...';
         }
 
-        return this.props.players.find(p => p.id !== this.playerId).username;
+        const player = this.props.players.find(p => p.id !== this.playerId);
+
+        if (player.offline) {
+          return 'Opponent connection lost, waiting for reconnect...';
+        }
+
+        return player.username;
+      }
 
       default:
         return null;

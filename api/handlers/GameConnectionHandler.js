@@ -1,7 +1,12 @@
 import { sha256 } from 'js-sha256';
 
 import BaseHandler from './BaseHandler';
-import { createNewGame, addPlayer, reconnectPlayer } from '../redux/actions';
+import {
+  createNewGame,
+  addPlayer,
+  reconnectPlayer,
+  disconnectPlayer
+} from '../redux/actions';
 import store from '../redux/store';
 import uiActionTypes from '../ui-action-types';
 
@@ -69,6 +74,26 @@ class GameConnectionHandler extends BaseHandler {
     this._updateGameForRoom();
   }
 
+  cleanUpGame() {
+    this.playerId = this._generatePlayerId();
+
+    if (!this._isPlayerInAnyGame()) {
+      return;
+    }
+
+    this.gameId = this._getPlayerGame().id;
+
+    store.dispatch(disconnectPlayer(this.gameId, this.playerId));
+
+    // if player game has been removed, just send a new list of games to all players
+    if (!this._isPlayerInAnyGame()) {
+      this._updateGameListForAll();
+      return;
+    }
+
+    this._updateGameForRoom();
+  }
+
   _generateGameId() {
     return sha256(Date.now() + this.client.id);
   }
@@ -77,12 +102,14 @@ class GameConnectionHandler extends BaseHandler {
     return sha256(clientId || this.client.id);
   }
 
-  _isPlayerInAnyGame() {
-    return (
-      Object.values(store.getState().gameDetails).findIndex(
-        g => g.players.map(p => p.id).indexOf(this.playerId) > -1
-      ) > -1
+  _getPlayerGame() {
+    return Object.values(store.getState().gameDetails).find(
+      g => g.players.map(p => p.id).indexOf(this.playerId) > -1
     );
+  }
+
+  _isPlayerInAnyGame() {
+    return !!this._getPlayerGame();
   }
 
   _isPlayerInCorrectGame() {

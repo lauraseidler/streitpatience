@@ -38,6 +38,7 @@ io.on('connection', client => {
   client.emit(uiActionTypes.SET_GAMES, store.getState().games);
 
   client.on('disconnect', () => {
+    gch.cleanUpGame();
     store.dispatch(setOnlinePlayers(store.getState().onlinePlayers - 1));
 
     io.sockets.emit(
