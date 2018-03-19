@@ -3,7 +3,8 @@ import {
   CREATE_NEW_GAME,
   RECONNECT_PLAYER,
   ADD_PLAYER,
-  DISCONNECT_PLAYER
+  DISCONNECT_PLAYER,
+  INIT_GAME
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -24,4 +25,8 @@ export function addPlayer(gameId, playerId, username) {
 
 export function disconnectPlayer(gameId, playerId) {
   return { type: DISCONNECT_PLAYER, payload: { gameId, playerId } };
+}
+
+export function initGame(gameId) {
+  return { type: INIT_GAME, payload: gameId };
 }

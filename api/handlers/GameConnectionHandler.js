@@ -5,7 +5,8 @@ import {
   createNewGame,
   addPlayer,
   reconnectPlayer,
-  disconnectPlayer
+  disconnectPlayer,
+  initGame
 } from '../redux/actions';
 import store from '../redux/store';
 import uiActionTypes from '../ui-action-types';
@@ -47,6 +48,8 @@ class GameConnectionHandler extends BaseHandler {
       return;
     }
 
+    store.dispatch(initGame(this.gameId));
+
     this._joinGameRoom();
     this._updateGameForRoom();
     this._updateGameListForAll();
@@ -75,13 +78,11 @@ class GameConnectionHandler extends BaseHandler {
   }
 
   cleanUpGame() {
-    this.playerId = this._generatePlayerId();
+    this._setPlayerAndGameId();
 
     if (!this._isPlayerInAnyGame()) {
       return;
     }
-
-    this.gameId = this._getPlayerGame().id;
 
     store.dispatch(disconnectPlayer(this.gameId, this.playerId));
 
@@ -98,20 +99,6 @@ class GameConnectionHandler extends BaseHandler {
     return sha256(Date.now() + this.client.id);
   }
 
-  _generatePlayerId(clientId) {
-    return sha256(clientId || this.client.id);
-  }
-
-  _getPlayerGame() {
-    return Object.values(store.getState().gameDetails).find(
-      g => g.players.map(p => p.id).indexOf(this.playerId) > -1
-    );
-  }
-
-  _isPlayerInAnyGame() {
-    return !!this._getPlayerGame();
-  }
-
   _isPlayerInCorrectGame() {
     const game = store.getState().gameDetails[this.gameId];
 
@@ -124,15 +111,6 @@ class GameConnectionHandler extends BaseHandler {
 
   _joinGameRoom() {
     this.client.join(this.gameId);
-  }
-
-  _updateGameForRoom() {
-    this.io
-      .to(this.gameId)
-      .emit(
-        uiActionTypes.SET_CURRENT_GAME,
-        store.getState().gameDetails[this.gameId]
-      );
   }
 
   _updateGameListForAll() {

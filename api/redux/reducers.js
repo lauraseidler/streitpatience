@@ -3,8 +3,10 @@ import {
   CREATE_NEW_GAME,
   RECONNECT_PLAYER,
   ADD_PLAYER,
-  DISCONNECT_PLAYER
+  DISCONNECT_PLAYER,
+  INIT_GAME
 } from './action-types';
+import Game from '../game-objects/Game';
 
 const DEFAULT_STATE = {
   onlinePlayers: 0,
@@ -111,6 +113,19 @@ const disconnectPlayer = (state, { payload: { gameId, playerId } }) => {
   };
 };
 
+const initGame = (state, action) => {
+  return {
+    ...state,
+    gameDetails: {
+      ...state.gameDetails,
+      [action.payload]: {
+        ...state.gameDetails[action.payload],
+        game: new Game(),
+      }
+    }
+  }
+}
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -123,6 +138,8 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return addPlayer(state, action);
     case DISCONNECT_PLAYER:
       return disconnectPlayer(state, action);
+    case INIT_GAME:
+      return initGame(state, action);
     default:
       return state;
   }

@@ -11,6 +11,7 @@ import {
 } from './redux/actions';
 import store from './redux/store';
 import uiActionTypes from './ui-action-types.js';
+import GamePlayHandler from './handlers/GamePlayHandler';
 
 const port = process.env.PORT || 80;
 const wsPort = process.env.WS_PORT || 4000;
@@ -27,6 +28,7 @@ app.listen(port, () => {
 
 io.on('connection', client => {
   const gch = new GameConnectionHandler(io, client);
+  const gph = new GamePlayHandler(io, client);
 
   store.dispatch(setOnlinePlayers(store.getState().onlinePlayers + 1));
 
@@ -52,4 +54,6 @@ io.on('connection', client => {
   client.on('joinGame', gch.joinGame.bind(gch));
 
   client.on('reconnectGame', gch.reconnectGame.bind(gch));
+
+  client.on('makeMove', gph.makeMove.bind(gph));
 });
