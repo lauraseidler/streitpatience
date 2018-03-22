@@ -16,6 +16,13 @@ class Card {
       ? COLORS.RED
       : COLORS.BLACK;
   }
+
+  toJSON() {
+    return {
+      suit: this.suit,
+      rank: this.rank,
+    }
+  }
 }
 
 export default Card;
