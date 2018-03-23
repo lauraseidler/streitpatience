@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { arrayOf, shape, string } from 'prop-types';
 import styled from 'styled-components';
-import sha256 from 'js-sha256';
 
 import socket from '../../socket';
 import { FONTS, COLORS, GRID_GAP } from '../../variables';
@@ -24,8 +23,6 @@ const Wrapper = styled.div`
 `;
 
 class PlayerInfo extends Component {
-  playerId = sha256(socket.getId());
-
   playerName = () => {
     switch (this.props.playerType) {
       case PLAYER_TYPES.SELF:
@@ -36,7 +33,9 @@ class PlayerInfo extends Component {
           return 'Waiting for opponent...';
         }
 
-        const player = this.props.players.find(p => p.id !== this.playerId);
+        const player = this.props.players.find(
+          p => p.id !== socket.getPlayerId()
+        );
 
         if (player.offline) {
           return 'Opponent connection lost, waiting for reconnect...';

@@ -7,10 +7,12 @@ import {
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
   SET_GAMES,
-  SET_USERNAME
+  SET_USERNAME,
+  SET_ACTIVE_STACK
 } from './action-types';
 
 const DEFAULT_STATE = {
+  activeStack: null,
   currentGame: null,
   games: [],
   gameView: GAME_VIEWS.ACTION_BOARD,
@@ -75,6 +77,37 @@ const setUsername = (state, action) => {
   };
 };
 
+const setActiveStack = (state, action) => {
+  const stacks = [
+    ...state.currentGame.game.familyStacks,
+    ...state.currentGame.game.stockStacks,
+    state.currentGame.game.playerStacks[0].draw,
+    state.currentGame.game.playerStacks[0].discard,
+    state.currentGame.game.playerStacks[0].main,
+    state.currentGame.game.playerStacks[1].draw,
+    state.currentGame.game.playerStacks[1].discard,
+    state.currentGame.game.playerStacks[1].main
+  ];
+
+  console.log(stacks);
+
+  if (state.activeStack) {
+    const activeStackType = stacks.find(s => s.id === state.activeStack).type;
+
+    console.log(activeStackType);
+
+    // if it's a draw card, it can't be put down again
+    if (activeStackType === 'DRAW' || action.payload !== null) {
+      return state;
+    }
+  }
+
+  return {
+    ...state,
+    activeStack: action.payload
+  };
+};
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -91,6 +124,8 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return setGames(state, action);
     case SET_USERNAME:
       return setUsername(state, action);
+    case SET_ACTIVE_STACK:
+      return setActiveStack(state, action);
     default:
       return state;
   }

@@ -12,16 +12,10 @@ class Card {
 
     this.suit = suit;
     this.rank = rank;
-    this.color = (suit === SUITS.HEARTS || suit === SUITS.DIAMONDS)
-      ? COLORS.RED
-      : COLORS.BLACK;
-  }
-
-  toJSON() {
-    return {
-      suit: this.suit,
-      rank: this.rank,
-    }
+    this.color =
+      suit === SUITS.HEARTS || suit === SUITS.DIAMONDS
+        ? COLORS.RED
+        : COLORS.BLACK;
   }
 }
 

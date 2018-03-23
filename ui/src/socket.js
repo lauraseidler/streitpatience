@@ -1,4 +1,5 @@
 import openSocket from 'socket.io-client';
+import sha256 from 'js-sha256';
 
 import actionTypes from './redux/action-types';
 import store from './redux/store';
@@ -29,6 +30,8 @@ const joinGame = gameId => {
 };
 
 const getId = () => socket.id;
+
+const getPlayerId = () => sha256(getId());
 
 const reconnect = () => {
   if (!prevSocketClientId || !prevGameId) {
@@ -65,5 +68,6 @@ export default {
   newGame,
   joinGame,
   getId,
+  getPlayerId,
   reconnect
 };

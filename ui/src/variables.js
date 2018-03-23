@@ -3,6 +3,7 @@ export const COLORS = {
   GREEN_DARK: '#01200F',
   GREEN_LIGHT: '#157F1F',
   FADE: 'rgba(255, 255, 255, 0.5)',
+  RED: '#F00',
   WHITE: '#FFF'
 };
 
