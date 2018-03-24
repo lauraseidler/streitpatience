@@ -8,6 +8,7 @@ import { COLORS, GRID_GAP, FONTS } from '../../variables';
 import PlayerInfo, { PLAYER_TYPES } from '../PlayerInfo/PlayerInfo';
 import socket from '../../socket';
 import Stack from '../Stack/Stack';
+import Errors from '../Errors/Errors';
 
 const GameTable = styled.div`
   display: grid;
@@ -47,6 +48,7 @@ const GameBoard = styled.div`
   min-height: 0;
   overflow: hidden;
   padding: ${GRID_GAP};
+  position: relative;
 `;
 
 const WaitingNotice = styled.p`
@@ -71,8 +73,9 @@ class Game extends Component {
       <PlayerInfo playerType={PLAYER_TYPES.OPPONENT} />
 
       <GameBoard>
-        {this.props.game ? (
+        {this.props.game && this.selfIndex() > -1 ? (
           <Fragment>
+            <Errors />
             <Stack
               placement="opponent-draw"
               {...this.props.game.playerStacks[this.opponentIndex()].draw}

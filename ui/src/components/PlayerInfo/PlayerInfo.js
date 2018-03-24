@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, shape, string } from 'prop-types';
+import { arrayOf, shape, string, number } from 'prop-types';
 import styled from 'styled-components';
 
 import socket from '../../socket';
@@ -14,6 +14,11 @@ export const PLAYER_TYPES = {
 const Wrapper = styled.div`
   align-items: center;
   background: ${COLORS.GREEN_DARK};
+  border-${props =>
+    props.playerType === PLAYER_TYPES.SELF
+      ? 'left'
+      : 'right'}: 10px solid ${props =>
+  props.activePlayer ? 'red' : COLORS.GREEN_DARK};
   color: ${COLORS.WHITE};
   display: flex;
   font-family: ${FONTS.DECO};
@@ -49,8 +54,20 @@ class PlayerInfo extends Component {
     }
   };
 
+  activePlayer = () =>
+    this.props.playerType === PLAYER_TYPES.SELF
+      ? this.props.players.findIndex(p => p.id === socket.getPlayerId()) ===
+        this.props.playerTurn
+      : this.props.players.findIndex(p => p.id !== socket.getPlayerId()) ===
+        this.props.playerTurn;
+
   render = () => (
-    <Wrapper playerType={this.props.playerType}>{this.playerName()}</Wrapper>
+    <Wrapper
+      activePlayer={this.activePlayer()}
+      playerType={this.props.playerType}
+    >
+      {this.playerName()}
+    </Wrapper>
   );
 }
 
@@ -61,11 +78,17 @@ PlayerInfo.propTypes = {
       username: string.isRequired
     })
   ).isRequired,
-  playerType: string.isRequired
+  playerType: string.isRequired,
+  playerTurn: number
+};
+
+PlayerInfo.defaultProps = {
+  playerTurn: null
 };
 
 const mapStateToProps = state => ({
-  players: state.currentGame.players
+  players: state.currentGame.players,
+  playerTurn: state.currentGame.game ? state.currentGame.game.playerTurn : null
 });
 
 export default connect(mapStateToProps)(PlayerInfo);

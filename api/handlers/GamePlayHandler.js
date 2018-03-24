@@ -2,6 +2,7 @@ import BaseHandler from './BaseHandler';
 import { setActiveStack } from '../redux/actions';
 import store from '../redux/store';
 import { STACK_TYPES } from '../game-objects/constants';
+import uiActionTypes from '../ui-action-types';
 
 class GamePlayHandler extends BaseHandler {
   stackClick(stackId) {
@@ -12,7 +13,7 @@ class GamePlayHandler extends BaseHandler {
     }
 
     if (!this._isPlayerTurn()) {
-      console.log('wrong player');
+      this._sendError(`It's not your turn!`);
       return;
     }
 
@@ -26,45 +27,60 @@ class GamePlayHandler extends BaseHandler {
         typeof clickedStack.player !== 'undefined' &&
         clickedStack.player !== this._getPlayerIndex()
       ) {
-        console.log('cannot pick up cards from other players pile');
+        this._sendError(`You cannot play cards from your opponent's stacks!`);
         return;
       }
 
       if (
-        [STACK_TYPES.DISCARD, STACK_TYPES.FAMILY].indexOf(clickedStack.type) >
-        -1
+        clickedStack.type === STACK_TYPES.DISCARD ||
+        clickedStack.type === STACK_TYPES.FAMILY
       ) {
-        console.log('cannot pick up cards from discard and family piles');
+        this._sendError(`You cannot play cards from this pile!`);
         return;
       }
 
       if (clickedStack.cards.length < 1) {
-        console.log('cannot pick up cards from empty stack');
+        this._sendError('There is no cards on this stack!');
         return;
       }
 
-      console.log('mark stack active');
       store.dispatch(setActiveStack(this.gameId, stackId));
       this._updateGameForRoom();
       return;
     }
 
     if (
-      activeStack.type === STACK_TYPES.DRAW &&
+      activeStack.id === clickedStack.id &&
       clickedStack.type === STACK_TYPES.DRAW
     ) {
-      console.log('cannot put cards back on draw stacks');
+      this._sendError('You cannot put this card back down!');
+      return;
+    }
+
+    if (
+      clickedStack.type === STACK_TYPES.DRAW &&
+      clickedStack.player !== this._getPlayerIndex()
+    ) {
+      this._sendError('You cannot place this card here!');
+      return;
+    }
+
+    if (
+      activeStack.id !== clickedStack.id &&
+      clickedStack.player === this._getPlayerIndex() &&
+      clickedStack.type === STACK_TYPES.MAIN
+    ) {
+      this._sendError(`You don't really want to place this card here...`);
       return;
     }
 
     if (activeStack.id === clickedStack.id) {
-      console.log('put card back down');
       store.dispatch(setActiveStack(this.gameId, null));
       this._updateGameForRoom();
       return;
     }
 
-    console.log('TODO: try to move card');
+    this._sendError('TODO: try to move card');
   }
 
   _isPlayerTurn() {
@@ -75,6 +91,11 @@ class GamePlayHandler extends BaseHandler {
     return this._getPlayerGame()
       .players.map(p => p.id)
       .indexOf(this.playerId);
+  }
+
+  _sendError(message) {
+    console.log('ERROR:', message);
+    this.client.emit(uiActionTypes.SET_ERROR_MESSAGE, message);
   }
 }
 

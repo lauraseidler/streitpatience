@@ -7,11 +7,16 @@ import {
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
   SET_GAMES,
-  SET_USERNAME
+  SET_USERNAME,
+  SET_ERROR_MESSAGE,
+  REMOVE_ERROR_MESSAGE
 } from './action-types';
+import { removeErrorMessage as removeErrorMessageAction } from './actions';
+import store from './store';
 
 const DEFAULT_STATE = {
   currentGame: null,
+  errorMessages: [],
   games: [],
   gameView: GAME_VIEWS.ACTION_BOARD,
   onlinePlayers: 0,
@@ -75,6 +80,22 @@ const setUsername = (state, action) => {
   };
 };
 
+const setErrorMessage = (state, action) => {
+  setTimeout(() => {
+    store.dispatch(removeErrorMessageAction());
+  }, 2500);
+
+  return {
+    ...state,
+    errorMessages: [...state.errorMessages, action.payload]
+  };
+};
+
+const removeErrorMessage = state => ({
+  ...state,
+  errorMessages: state.errorMessages.slice(1)
+});
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -91,6 +112,10 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return setGames(state, action);
     case SET_USERNAME:
       return setUsername(state, action);
+    case SET_ERROR_MESSAGE:
+      return setErrorMessage(state, action);
+    case REMOVE_ERROR_MESSAGE:
+      return removeErrorMessage(state);
     default:
       return state;
   }

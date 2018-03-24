@@ -5,7 +5,9 @@ import {
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
   SET_GAMES,
-  SET_USERNAME
+  SET_USERNAME,
+  SET_ERROR_MESSAGE,
+  REMOVE_ERROR_MESSAGE
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -34,4 +36,12 @@ export function setGames(games) {
 
 export function setUsername(username) {
   return { type: SET_USERNAME, payload: username };
+}
+
+export function setErrorMessage(message) {
+  return { type: SET_ERROR_MESSAGE, payload: message };
+}
+
+export function removeErrorMessage() {
+  return { type: REMOVE_ERROR_MESSAGE };
 }
