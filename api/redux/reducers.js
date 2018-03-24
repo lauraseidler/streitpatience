@@ -5,7 +5,9 @@ import {
   ADD_PLAYER,
   DISCONNECT_PLAYER,
   INIT_GAME,
-  SET_ACTIVE_STACK
+  SET_ACTIVE_STACK,
+  MOVE_CARD,
+  SWITCH_PLAYER
 } from './action-types';
 import Game from '../game-objects/Game';
 
@@ -143,6 +145,23 @@ const setActiveStack = (state, { payload: { gameId, stackId } }) => {
   };
 };
 
+const moveCard = (state, { payload: { gameId, fromStackId, toStackId } }) => {
+  const game = state.gameDetails[gameId].game;
+  const fromStack = game.getStackById(fromStackId);
+  const toStack = game.getStackById(toStackId);
+
+  toStack.addCard(fromStack.removeCard());
+
+  return state;
+};
+
+const switchPlayer = (state, action) => {
+  const game = state.gameDetails[action.payload].game;
+  game.switchPlayer();
+
+  return state;
+};
+
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case SET_ONLINE_PLAYERS:
@@ -159,6 +178,10 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return initGame(state, action);
     case SET_ACTIVE_STACK:
       return setActiveStack(state, action);
+    case MOVE_CARD:
+      return moveCard(state, action);
+    case SWITCH_PLAYER:
+      return switchPlayer(state, action);
     default:
       return state;
   }

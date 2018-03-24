@@ -25,12 +25,16 @@ class Stack extends Component {
       onClick={() => socket.emit('stackClick', this.props.id)}
       isActive={this.props.isActive}
     >
-      {!this.props.cards.length || (
-        <Card
-          {...this.props.cards[0]}
-          isFaceVisible={this.isFaceVisible()}
-          isActive={this.props.isActive}
-        />
+      {this.props.cards.map(
+        (card, index) =>
+          /* this.props.type === 'STOCK' || */ index === 0 ? (
+            <Card
+              {...card}
+              key={`${card.suit}-${card.rank}-${this.props.player}`}
+              isFaceVisible={this.isFaceVisible()}
+              isActive={this.props.isActive}
+            />
+          ) : null
       )}
     </Wrapper>
   );

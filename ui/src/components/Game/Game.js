@@ -38,10 +38,10 @@ const GameBoard = styled.div`
   grid-template-areas:
     'opponent-draw opponent-discard . . . . . . . .'
     '. . . . . . . . . .'
-    'opponent-main . . stock-1 family-1 family-2 stock-2 . . .'
-    '. . . stock-3 family-3 family-4 stock-4 . . .'
-    '. . . stock-5 family-5 family-6 stock-6 . . .'
-    '. . . stock-7 family-7 family-8 stock-8 . . self-main'
+    'opponent-main . . stock-1 family-1 family-8 stock-8 . . .'
+    '. . . stock-2 family-2 family-7 stock-7 . . .'
+    '. . . stock-3 family-3 family-6 stock-6 . . .'
+    '. . . stock-4 family-4 family-5 stock-5 . . self-main'
     '. . . . . . . . . .'
     '. . . . . . . . self-discard self-draw';
 
@@ -68,6 +68,8 @@ class Game extends Component {
 
   opponentIndex = () => (this.selfIndex() === 0 ? 1 : 0);
 
+  adjustIndex = index => (this.selfIndex() === 0 ? index : (index + 4) % 8);
+
   render = () => (
     <GameTable>
       <PlayerInfo playerType={PLAYER_TYPES.OPPONENT} />
@@ -92,11 +94,19 @@ class Game extends Component {
             />
 
             {this.props.game.familyStacks.map((stack, i) => (
-              <Stack key={stack.id} placement={`family-${i + 1}`} {...stack} />
+              <Stack
+                key={stack.id}
+                placement={`family-${this.adjustIndex(i) + 1}`}
+                {...stack}
+              />
             ))}
 
             {this.props.game.stockStacks.map((stack, i) => (
-              <Stack key={stack.id} placement={`stock-${i + 1}`} {...stack} />
+              <Stack
+                key={stack.id}
+                placement={`stock-${this.adjustIndex(i) + 1}`}
+                {...stack}
+              />
             ))}
 
             <Stack

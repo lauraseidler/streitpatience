@@ -1,5 +1,5 @@
 import BaseHandler from './BaseHandler';
-import { setActiveStack } from '../redux/actions';
+import { setActiveStack, moveCard, switchPlayer } from '../redux/actions';
 import store from '../redux/store';
 import { STACK_TYPES } from '../game-objects/constants';
 import uiActionTypes from '../ui-action-types';
@@ -74,13 +74,42 @@ class GamePlayHandler extends BaseHandler {
       return;
     }
 
+    if (
+      typeof clickedStack.player !== 'undefined' &&
+      (activeStack.type === STACK_TYPES.FAMILY ||
+        activeStack.type === STACK_TYPES.STOCK)
+    ) {
+      this._sendError(
+        'You cannot play cards from communal stacks onto opponent stacks!'
+      );
+      return;
+    }
+
     if (activeStack.id === clickedStack.id) {
       store.dispatch(setActiveStack(this.gameId, null));
       this._updateGameForRoom();
       return;
     }
 
-    this._sendError('TODO: try to move card');
+    if (
+      !clickedStack.cardAllowed(activeStack.cards[0], this._getPlayerIndex())
+    ) {
+      this._sendError(`This card doesn't fit here!`);
+      return;
+    }
+
+    store.dispatch(moveCard(this.gameId, activeStack.id, clickedStack.id));
+    store.dispatch(setActiveStack(this.gameId, null));
+
+    if (
+      clickedStack.type === STACK_TYPES.DISCARD &&
+      clickedStack.player === this._getPlayerIndex()
+    ) {
+      store.dispatch(switchPlayer(this.gameId));
+    }
+    this._updateGameForRoom();
+
+    return;
   }
 
   _isPlayerTurn() {
@@ -94,7 +123,6 @@ class GamePlayHandler extends BaseHandler {
   }
 
   _sendError(message) {
-    console.log('ERROR:', message);
     this.client.emit(uiActionTypes.SET_ERROR_MESSAGE, message);
   }
 }

@@ -5,6 +5,8 @@ export const ADD_PLAYER = 'ADD_PLAYER';
 export const DISCONNECT_PLAYER = 'DISCONNECT_PLAYER';
 export const INIT_GAME = 'INIT_GAME';
 export const SET_ACTIVE_STACK = 'SET_ACTIVE_STACK';
+export const MOVE_CARD = 'MOVE_CARD';
+export const SWITCH_PLAYER = 'SWITCH_PLAYER';
 
 export default {
   SET_ONLINE_PLAYERS,
@@ -13,5 +15,7 @@ export default {
   ADD_PLAYER,
   DISCONNECT_PLAYER,
   INIT_GAME,
-  SET_ACTIVE_STACK
+  SET_ACTIVE_STACK,
+  MOVE_CARD,
+  SWITCH_PLAYER
 };

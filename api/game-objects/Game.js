@@ -63,6 +63,10 @@ class Game {
     ];
   }
 
+  switchPlayer() {
+    this.playerTurn = this.playerTurn === 0 ? 1 : 0;
+  }
+
   initStacks() {
     const cardDeck = [];
 

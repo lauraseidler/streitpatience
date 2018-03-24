@@ -1,5 +1,5 @@
 import sha256 from 'js-sha256';
-import { STACK_SETTINGS, STACK_TYPES } from './constants';
+import { STACK_SETTINGS, STACK_TYPES, RANKS } from './constants';
 
 let stackId = 0;
 
@@ -41,6 +41,74 @@ class Stack {
 
   setActiveState(stackId) {
     this.isActive = this.id === stackId && this.cards.length > 0;
+  }
+
+  cardAllowed(card, playerIndex) {
+    switch (this.type) {
+      case STACK_TYPES.FAMILY:
+        if (!this.cards.length && card.rank === RANKS.ACE) {
+          // allow aces on empty stacks
+          return true;
+        }
+
+        if (
+          this.cards.length &&
+          this.cards[0].rank + 1 === card.rank &&
+          this.cards[0].suit === card.suit
+        ) {
+          // allow next higher card of same suit
+          return true;
+        }
+
+        return false;
+
+      case STACK_TYPES.STOCK:
+        if (!this.cards.length) {
+          // allow all cards if stack is empty
+          return true;
+        }
+
+        if (
+          this.cards.length &&
+          this.cards[0].rank - 1 === card.rank &&
+          this.cards[0].color !== card.color
+        ) {
+          // allow next lower card of different color
+          return true;
+        }
+
+        return false;
+
+      case STACK_TYPES.DISCARD:
+      case STACK_TYPES.MAIN:
+        if (this.player === playerIndex) {
+          // allow all cards on own piles)
+          return true;
+        }
+
+        if (
+          this.cards.length &&
+          (this.cards[0].rank - 1 === card.rank ||
+            this.cards[0].rank + 1 === card.rank) &&
+          this.cards[0].suit === card.suit
+        ) {
+          // allow cards one up and down in same suit on opponents stacks
+          return true;
+        }
+
+        return false;
+
+      default:
+        return false;
+    }
+  }
+
+  removeCard() {
+    return this.cards.splice(0, 1)[0];
+  }
+
+  addCard(card) {
+    this.cards.splice(0, 0, card);
   }
 
   toJSON() {
