@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { shape, number, arrayOf, string } from 'prop-types';
 
 import { StackType } from '../../types';
-import { COLORS, GRID_GAP } from '../../variables';
+import { COLORS, GRID_GAP, FONTS } from '../../variables';
 import PlayerInfo, { PLAYER_TYPES } from '../PlayerInfo/PlayerInfo';
 import socket from '../../socket';
 import Stack from '../Stack/Stack';
@@ -47,6 +47,18 @@ const GameBoard = styled.div`
   min-height: 0;
   overflow: hidden;
   padding: ${GRID_GAP};
+`;
+
+const WaitingNotice = styled.p`
+  align-items: center;
+  display: flex;
+  font-family: ${FONTS.DECO};
+  font-size: 2rem;
+  grid-area: 3 / 4 / 7 / 8;
+  justify-contents: center;
+  margin: 0;
+  padding: 100px;
+  text-align: center;
 `;
 
 class Game extends Component {
@@ -100,7 +112,7 @@ class Game extends Component {
             />
           </Fragment>
         ) : (
-          'Waiting for game to start...'
+          <WaitingNotice>Waiting for game to start...</WaitingNotice>
         )}
       </GameBoard>
 
