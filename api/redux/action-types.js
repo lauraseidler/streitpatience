@@ -4,6 +4,7 @@ export const RECONNECT_PLAYER = 'RECONNECT_PLAYER';
 export const ADD_PLAYER = 'ADD_PLAYER';
 export const DISCONNECT_PLAYER = 'DISCONNECT_PLAYER';
 export const INIT_GAME = 'INIT_GAME';
+export const SET_ACTIVE_STACK = 'SET_ACTIVE_STACK';
 
 export default {
   SET_ONLINE_PLAYERS,
@@ -11,5 +12,6 @@ export default {
   RECONNECT_PLAYER,
   ADD_PLAYER,
   DISCONNECT_PLAYER,
-  INIT_GAME
+  INIT_GAME,
+  SET_ACTIVE_STACK
 };

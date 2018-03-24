@@ -4,7 +4,8 @@ import {
   RECONNECT_PLAYER,
   ADD_PLAYER,
   DISCONNECT_PLAYER,
-  INIT_GAME
+  INIT_GAME,
+  SET_ACTIVE_STACK
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -29,4 +30,8 @@ export function disconnectPlayer(gameId, playerId) {
 
 export function initGame(gameId) {
   return { type: INIT_GAME, payload: gameId };
+}
+
+export function setActiveStack(gameId, stackId) {
+  return { type: SET_ACTIVE_STACK, payload: { gameId, stackId } };
 }

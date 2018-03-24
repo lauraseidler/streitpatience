@@ -5,8 +5,7 @@ import {
   PROMPT_RECONNECT,
   ABORT_RECONNECT,
   SET_GAMES,
-  SET_USERNAME,
-  SET_ACTIVE_STACK
+  SET_USERNAME
 } from './action-types';
 
 export function setOnlinePlayers(onlinePlayers) {
@@ -35,8 +34,4 @@ export function setGames(games) {
 
 export function setUsername(username) {
   return { type: SET_USERNAME, payload: username };
-}
-
-export function setActiveStack(stackId) {
-  return { type: SET_ACTIVE_STACK, payload: stackId };
 }

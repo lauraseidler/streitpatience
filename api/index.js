@@ -55,5 +55,5 @@ io.on('connection', client => {
 
   client.on('reconnectGame', gch.reconnectGame.bind(gch));
 
-  client.on('makeMove', gph.makeMove.bind(gph));
+  client.on('stackClick', gph.stackClick.bind(gph));
 });

@@ -12,6 +12,7 @@ class Stack {
       throw new Error('Invalid stack type!');
     }
 
+    this.isActive = false;
     this.type = type;
     this.settings = {
       ...STACK_SETTINGS.DEFAULT,
@@ -38,12 +39,17 @@ class Stack {
     return true;
   }
 
+  setActiveState(stackId) {
+    this.isActive = this.id === stackId && this.cards.length > 0;
+  }
+
   toJSON() {
     return {
       id: this.id,
       player: this.player,
       type: this.type,
-      cards: this.cards
+      cards: this.cards,
+      isActive: this.isActive
     };
   }
 }

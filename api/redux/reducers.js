@@ -4,7 +4,8 @@ import {
   RECONNECT_PLAYER,
   ADD_PLAYER,
   DISCONNECT_PLAYER,
-  INIT_GAME
+  INIT_GAME,
+  SET_ACTIVE_STACK
 } from './action-types';
 import Game from '../game-objects/Game';
 
@@ -120,11 +121,27 @@ const initGame = (state, action) => {
       ...state.gameDetails,
       [action.payload]: {
         ...state.gameDetails[action.payload],
-        game: new Game(),
+        game: new Game()
       }
     }
-  }
-}
+  };
+};
+
+const setActiveStack = (state, { payload: { gameId, stackId } }) => {
+  const game = state.gameDetails[gameId].game;
+  game.setActiveStack(stackId);
+
+  return {
+    ...state,
+    gameDetails: {
+      ...state.gameDetails,
+      [gameId]: {
+        ...state.gameDetails[gameId],
+        game
+      }
+    }
+  };
+};
 
 const rootReducer = (state = DEFAULT_STATE, action) => {
   switch (action.type) {
@@ -140,6 +157,8 @@ const rootReducer = (state = DEFAULT_STATE, action) => {
       return disconnectPlayer(state, action);
     case INIT_GAME:
       return initGame(state, action);
+    case SET_ACTIVE_STACK:
+      return setActiveStack(state, action);
     default:
       return state;
   }
