@@ -1,10 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { func } from 'prop-types';
 
 import socket from '../../socket';
-import { abortReconnect } from '../../redux/actions';
 import { GRID_GAP, COLORS } from '../../variables';
 import TextHeadline from '../TextHeadline/TextHeadline';
 import BigButton from '../BigButton/BigButton';
@@ -24,7 +21,7 @@ const HeadlineWrapper = styled.div`
   text-align: center;
 `;
 
-const ReconnectPrompt = props => (
+const ReconnectPrompt = () => (
   <Grid>
     <HeadlineWrapper>
       <TextHeadline>
@@ -32,21 +29,11 @@ const ReconnectPrompt = props => (
       </TextHeadline>
     </HeadlineWrapper>
 
-    <BigButton onClick={() => socket.reconnect()}>Yes</BigButton>
-    <BigButton onClick={() => props.abortReconnect()} bg={COLORS.GREEN_LIGHT}>
+    <BigButton onClick={() => socket.doReconnect()}>Yes</BigButton>
+    <BigButton onClick={() => socket.abortReconnect()} bg={COLORS.GREEN_LIGHT}>
       No
     </BigButton>
   </Grid>
 );
 
-ReconnectPrompt.propTypes = {
-  abortReconnect: func.isRequired
-};
-
-const mapDispatchToProps = dispatch => ({
-  abortReconnect() {
-    dispatch(abortReconnect());
-  }
-});
-
-export default connect(() => ({}), mapDispatchToProps)(ReconnectPrompt);
+export default ReconnectPrompt;

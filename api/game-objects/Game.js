@@ -1,10 +1,12 @@
-import Stack from './Stack';
-import { STACK_TYPES, SUITS, RANKS } from './constants';
+import { sha256 } from 'js-sha256';
+
 import Card from './Card';
+import { STACK_TYPES, SUITS, RANKS } from './constants';
+import Stack from './Stack';
 
 /**
- * Shuffles array in place.
- * @param {Array} a items An array containing the items.
+ * Shuffle array in place.
+ * @param {Array} a An array containing the items.
  */
 function shuffle(a) {
   let j, x, i;
@@ -18,56 +20,268 @@ function shuffle(a) {
 }
 
 class Game {
-  constructor() {
-    // random player start
-    this.playerTurn = Math.round(Math.random());
+  /**
+   * Unique game identifier.
+   *
+   * @type {string}
+   */
+  id = null;
 
-    this.createStacks();
-    this.initStacks();
+  /**
+   * Game name.
+   *
+   * @type {string}
+   */
+  name = null;
+
+  /**
+   * Players in game.
+   *
+   * @type {Array<Object>}
+   */
+  players = [];
+
+  /**
+   * Player ID of current player.
+   *
+   * @type {string}
+   */
+  currentPlayerId = null;
+
+  /**
+   * Game stacks
+   *
+   * @type {Array<Stack>}
+   */
+  stacks = [];
+
+  /**
+   * Whether the stock stacks are limited to play (very first turn)
+   *
+   * @type {bool}
+   */
+  limitedStockStacks = true;
+
+  /**
+   * Create new game.
+   *
+   * @param {string} name Game name
+   * @param {array} players Array of players
+   */
+  constructor(name) {
+    this.id = sha256(Date.now() + name);
+    this.name = name;
   }
 
-  createStacks() {
-    this.familyStacks = [
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY),
-      new Stack(STACK_TYPES.FAMILY)
-    ];
+  /**
+   * Add player to game.
+   *
+   * @param {Player} player Player info
+   * @returns {bool} Whether player has been added successfully
+   */
+  addPlayer(player) {
+    if (this.players.length > 1) {
+      return false;
+    }
 
-    this.stockStacks = [
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK),
-      new Stack(STACK_TYPES.STOCK)
-    ];
+    this.players.push(player);
 
-    this.playerStacks = [
-      {
-        draw: new Stack(STACK_TYPES.DRAW, 0),
-        discard: new Stack(STACK_TYPES.DISCARD, 0),
-        main: new Stack(STACK_TYPES.MAIN, 0)
-      },
-      {
-        draw: new Stack(STACK_TYPES.DRAW, 1),
-        discard: new Stack(STACK_TYPES.DISCARD, 1),
-        main: new Stack(STACK_TYPES.MAIN, 1)
+    return true;
+  }
+
+  /**
+   * Replace a player in a game with a different player.
+   *
+   * @param {Player} oldPlayer Player to replace
+   * @param {Player} newPlayer Player replacing old player
+   */
+  replacePlayer(oldPlayer, newPlayer) {
+    this.players = this.players.map(
+      p => (p.id === oldPlayer.id ? newPlayer : p)
+    );
+
+    if (this.currentPlayerId === oldPlayer.id) {
+      this.currentPlayerId = newPlayer.id;
+    }
+  }
+
+  /**
+   * Initialise game.
+   */
+  init() {
+    this.currentPlayerId = this.players[Math.round(Math.random())].id;
+
+    this._createStacks();
+    this._initStacks();
+  }
+
+  /**
+   * Find stack by stackId.
+   *
+   * @param {string} stackId Unique stack identifier
+   * @returns {Stack}
+   */
+  getStackById(stackId) {
+    return this.stacks.find(s => s.id === stackId);
+  }
+
+  /**
+   * Find active stack.
+   *
+   * @returns {Stack}
+   */
+  getActiveStack() {
+    return this.stacks.find(s => s.isActive);
+  }
+
+  /**
+   * Set stack with stackId as active or inactive,
+   * dependent on current state and stack configuration.
+   *
+   * @param {string} stackId Unique stack identifier
+   * @returns {bool}
+   */
+  setActiveStack(stackId) {
+    const activeStack = this.getActiveStack();
+
+    if (activeStack.id === stackId) {
+      if (!activeStack.canPutCardBack()) {
+        return false;
       }
+
+      activeStack.setActiveState(false);
+      return true;
+    }
+
+    const newActiveStack = this.getStackById(stackId);
+
+    if (newActiveStack.canPickCardUp()) {
+      newActiveStack.setActiveState(true);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Switch currently active player.
+   */
+  switchPlayer() {
+    this.currentPlayerId = this.players.find(
+      p => p.id !== this.currentPlayerId
+    ).id;
+
+    this.limitedStockStacks = false;
+  }
+
+  /**
+   * The number of stock stacks that have cards in them.
+   *
+   * @returns {bool}
+   */
+  numberOfStockStacksFilled() {
+    let number;
+
+    for (let i = 8; i < 16; i++) {
+      if (this.stacks[i].cards.length) {
+        number++;
+      }
+    }
+
+    return number;
+  }
+
+  /**
+   * Whether a given card could be placed onto a communal stack
+   *
+   * @param {Card} card Card to play
+   * @returns {bool}
+   */
+  cardAllowedOnCommunalStack(card) {
+    return (
+      this.cardAllowedOnFamilyStack(card) || this.cardAllowedOnStockStack(card)
+    );
+  }
+
+  /**
+   * Whether a given card could be placed onto a family stack
+   *
+   * @param {Card} card Card to play
+   * @returns {bool}
+   */
+  cardAllowedOnFamilyStack(card) {
+    for (let i = 0; i < 8; i++) {
+      if (this.stacks[i].cardAllowed(card)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Whether a given card could be placed onto a stock stack
+   *
+   * @param {Card} card Card to play
+   * @returns {bool}
+   */
+  cardAllowedOnStockStack(card) {
+    let number;
+
+    for (let i = 8; i < 16; i++) {
+      if (this.stacks[i].cardAllowed(card)) {
+        number++;
+
+        if (!this.limitedStockStacks) {
+          return true;
+        }
+      }
+    }
+
+    if (this.limitedStockStacks && number > 4) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Create game stacks.
+   */
+  _createStacks() {
+    this.stacks = [
+      new Stack(this, STACK_TYPES.FAMILY), // 0
+      new Stack(this, STACK_TYPES.FAMILY), // 1
+      new Stack(this, STACK_TYPES.FAMILY), // 2
+      new Stack(this, STACK_TYPES.FAMILY), // 3
+      new Stack(this, STACK_TYPES.FAMILY), // 4
+      new Stack(this, STACK_TYPES.FAMILY), // 5
+      new Stack(this, STACK_TYPES.FAMILY), // 6
+      new Stack(this, STACK_TYPES.FAMILY), // 7
+
+      new Stack(this, STACK_TYPES.STOCK), // 8
+      new Stack(this, STACK_TYPES.STOCK), // 9
+      new Stack(this, STACK_TYPES.STOCK), // 10
+      new Stack(this, STACK_TYPES.STOCK), // 11
+      new Stack(this, STACK_TYPES.STOCK), // 12
+      new Stack(this, STACK_TYPES.STOCK), // 13
+      new Stack(this, STACK_TYPES.STOCK), // 14
+      new Stack(this, STACK_TYPES.STOCK), // 15
+
+      new Stack(this, STACK_TYPES.DRAW, this.players[0].id), // 16
+      new Stack(this, STACK_TYPES.DISCARD, this.players[0].id), // 17
+      new Stack(this, STACK_TYPES.MAIN, this.players[0].id), // 18
+
+      new Stack(this, STACK_TYPES.DRAW, this.players[1].id), // 19
+      new Stack(this, STACK_TYPES.DISCARD, this.players[1].id), // 20
+      new Stack(this, STACK_TYPES.MAIN, this.players[1].id) // 21
     ];
   }
 
-  switchPlayer() {
-    this.playerTurn = this.playerTurn === 0 ? 1 : 0;
-  }
-
-  initStacks() {
+  /**
+   * Initialise cards in game stacks.
+   */
+  _initStacks() {
     const cardDeck = [];
 
     Object.values(SUITS).forEach(suit => {
@@ -79,42 +293,12 @@ class Game {
     [0, 1].forEach(player => {
       shuffle(cardDeck);
 
-      this.playerStacks[player].main.setCards(cardDeck.slice(0, 13));
-      this.playerStacks[player].draw.setCards(cardDeck.slice(13));
+      // put 13 cards on main stack
+      this.stacks[18 + player * 3].setCards(cardDeck.slice(0, 13));
+
+      // put the rest on draw stack
+      this.stacks[16 + player * 3].setCards(cardDeck.slice(13));
     });
-  }
-
-  setActiveStack(stackId) {
-    this.familyStacks.forEach(stack => stack.setActiveState(stackId));
-    this.stockStacks.forEach(stack => stack.setActiveState(stackId));
-    this.playerStacks.forEach(player => {
-      player.draw.setActiveState(stackId);
-      player.discard.setActiveState(stackId);
-      player.main.setActiveState(stackId);
-    });
-  }
-
-  getAllStacks() {
-    const stacks = [
-      ...this.familyStacks,
-      ...this.stockStacks,
-      this.playerStacks[0].draw,
-      this.playerStacks[0].discard,
-      this.playerStacks[0].main,
-      this.playerStacks[1].draw,
-      this.playerStacks[1].discard,
-      this.playerStacks[1].main
-    ];
-
-    return stacks;
-  }
-
-  getActiveStack() {
-    return this.getAllStacks().find(s => s.isActive);
-  }
-
-  getStackById(stackId) {
-    return this.getAllStacks().find(s => s.id === stackId);
   }
 }
 

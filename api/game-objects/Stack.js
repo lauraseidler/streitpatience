@@ -3,16 +3,74 @@ import { STACK_SETTINGS, STACK_TYPES, RANKS } from './constants';
 
 let stackId = 0;
 
+/**
+ * Card stack.
+ */
 class Stack {
-  constructor(type, player = null) {
+  /**
+   * Game the stack belongs to.
+   *
+   * @type {Game}
+   */
+  game = null;
+
+  /**
+   * Unique stack identifier.
+   *
+   * @type {string}
+   */
+  id = null;
+
+  /**
+   * Cards on the stack.
+   *
+   * @type {Array<Card>}
+   */
+  cards = [];
+
+  /**
+   * Whether the stack is currently active.
+   *
+   * @type {bool}
+   */
+  isActive = false;
+
+  /**
+   * Stack type
+   *
+   * @type {string}
+   */
+  type = null;
+
+  /**
+   * Stack settings
+   *
+   * @type {Object}
+   */
+  settings = {};
+
+  /**
+   * Player ID
+   *
+   * @type {string}
+   */
+  player = null;
+
+  /**
+   * Create new stack.
+   *
+   * @param {Game}    game    Game the stack belongs to
+   * @param {string}  type    Stack type
+   * @param {string}  player  Unique player identifier
+   */
+  constructor(game, type, player = null) {
+    this.game = game;
     this.id = sha256(`stack ${++stackId} created at ${Date.now()}`);
-    this.cards = [];
 
     if (Object.values(STACK_TYPES).indexOf(type) < 0) {
       throw new Error('Invalid stack type!');
     }
 
-    this.isActive = false;
     this.type = type;
     this.settings = {
       ...STACK_SETTINGS.DEFAULT,
@@ -23,24 +81,20 @@ class Stack {
       return;
     }
 
-    if (typeof player === 'undefined' || [0, 1].indexOf(player) < 0) {
+    if (!player || this.game.players.map(p => p.id).indexOf(player) < 0) {
       throw new Error('Invalid player!');
     }
 
     this.player = player;
   }
 
+  /**
+   * Put any cards on the stack.
+   *
+   * @param {Array<Card>} cards Cards to be put on the stack
+   */
   setCards(cards) {
     this.cards = cards;
-  }
-
-  putCard(card, player) {
-    // TODO: implement logic
-    return true;
-  }
-
-  setActiveState(stackId) {
-    this.isActive = this.id === stackId && this.cards.length > 0;
   }
 
   cardAllowed(card, playerIndex) {
@@ -103,14 +157,83 @@ class Stack {
     }
   }
 
+  /**
+   * Remove card from stack and return it.
+   *
+   * @returns {Card} Removed card
+   */
   removeCard() {
     return this.cards.splice(0, 1)[0];
   }
 
+  /**
+   * Add card to the top of the stack.
+   *
+   * @param {Card} card Card to add to the stack
+   */
   addCard(card) {
     this.cards.splice(0, 0, card);
   }
 
+  /**
+   * Whether the stack belongs to the player.
+   *
+   * @param {string} playerId Unique player identifier
+   * @returns {bool}
+   */
+  isPlayerStack(playerId) {
+    return this.player === playerId;
+  }
+
+  /**
+   * Whether the stack is a communal stack.
+   *
+   * @returns {bool}
+   */
+  isCommunalStack() {
+    return this.player === null;
+  }
+
+  /**
+   * Whether the stack belongs to the opponent of the given player.
+   *
+   * @param {string} playerId Unique player identifier
+   * @returns {bool}
+   */
+  isOpponentStack(playerId) {
+    return !this.isPlayerStack(playerId) && !this.isCommunalStack();
+  }
+
+  /**
+   * Whether cards from this stack can be picked up.
+   *
+   * @returns {bool}
+   */
+  canPickUpCard() {
+    return this.settings.canPickUpCard;
+  }
+
+  /**
+   * Whether a card can be put back on this stack.
+   *
+   * @returns {bool}
+   */
+  canPutCardBack() {
+    return this.settings.canPutCardBack;
+  }
+
+  /**
+   * Whether the opponent can put a card on this stack.
+   *
+   * @returns {bool}
+   */
+  canOpponentPutCard() {
+    return this.settings.canOpponentPutCard;
+  }
+
+  /**
+   * Get properties to serialize for client
+   */
   toJSON() {
     return {
       id: this.id,

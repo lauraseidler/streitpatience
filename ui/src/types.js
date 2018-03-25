@@ -9,5 +9,5 @@ export const StackType = shape({
   id: string.isRequired,
   type: string.isRequired,
   cards: arrayOf(CardType),
-  player: number
+  player: string
 });

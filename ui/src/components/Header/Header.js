@@ -43,7 +43,11 @@ const Header = props => (
 
 Header.propTypes = {
   onlinePlayers: number.isRequired,
-  username: string.isRequired
+  username: string
+};
+
+Header.defaultProps = {
+  username: ''
 };
 
 const mapStateToProps = state => ({

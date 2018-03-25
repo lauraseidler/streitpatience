@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { func, string } from 'prop-types';
 
-import { setUsername, setGameView } from '../../redux/actions';
+import { setGameView } from '../../redux/actions';
 import TextHeadline from '../TextHeadline/TextHeadline';
 import Button from '../Button/Button';
 import { GAME_VIEWS, COLORS, FONTS } from '../../variables';
+import socket from '../../socket';
 
 const Input = styled.input`
   background: none;
@@ -30,7 +31,7 @@ class UsernameSetting extends Component {
   };
 
   saveUsername = () => {
-    this.props.setUsername(this.state.username);
+    socket.emit('setUsername', this.state.username);
     this.props.setGameView(GAME_VIEWS.ACTION_BOARD);
   };
 
@@ -58,16 +59,12 @@ class UsernameSetting extends Component {
 
 UsernameSetting.propTypes = {
   setGameView: func.isRequired,
-  setUsername: func.isRequired,
   username: string.isRequired
 };
 
 const mapStateToProps = state => ({ username: state.username });
 
 const mapDispatchToProps = dispatch => ({
-  setUsername(username) {
-    dispatch(setUsername(username));
-  },
   setGameView(view) {
     dispatch(setGameView(view));
   }

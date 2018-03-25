@@ -18,7 +18,9 @@ const JoinGame = props => (
           <tr key={game.id}>
             <td>{game.name}</td>
             <td>
-              <Button onClick={() => socket.joinGame(game.id)}>Join</Button>
+              <Button onClick={() => socket.emit('joinGame', game.id)}>
+                Join
+              </Button>
             </td>
           </tr>
         ))}

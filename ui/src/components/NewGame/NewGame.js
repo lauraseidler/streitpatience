@@ -13,7 +13,7 @@ const NewGame = () => (
 
     <p>Coming soon: picking a username, password protected games</p>
 
-    <Button onClick={() => socket.newGame()}>Start game now!</Button>
+    <Button onClick={() => socket.emit('newGame')}>Start game now!</Button>
   </Fragment>
 );
 

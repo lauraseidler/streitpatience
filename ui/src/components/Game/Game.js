@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { shape, number, arrayOf, string } from 'prop-types';
+import { shape, arrayOf, string } from 'prop-types';
 
 import { StackType } from '../../types';
 import { COLORS, GRID_GAP, FONTS } from '../../variables';
@@ -75,53 +75,59 @@ class Game extends Component {
       <PlayerInfo playerType={PLAYER_TYPES.OPPONENT} />
 
       <GameBoard>
-        {this.props.game && this.selfIndex() > -1 ? (
+        {this.props.game.stacks.length && this.selfIndex() > -1 ? (
           <Fragment>
             <Errors />
             <Stack
               placement="opponent-draw"
-              {...this.props.game.playerStacks[this.opponentIndex()].draw}
+              {...this.props.game.stacks[16 + this.opponentIndex() * 3]}
             />
 
             <Stack
               placement="opponent-discard"
-              {...this.props.game.playerStacks[this.opponentIndex()].discard}
+              {...this.props.game.stacks[17 + this.opponentIndex() * 3]}
             />
 
             <Stack
               placement="opponent-main"
-              {...this.props.game.playerStacks[this.opponentIndex()].main}
+              {...this.props.game.stacks[18 + this.opponentIndex() * 3]}
             />
 
-            {this.props.game.familyStacks.map((stack, i) => (
-              <Stack
-                key={stack.id}
-                placement={`family-${this.adjustIndex(i) + 1}`}
-                {...stack}
-              />
-            ))}
+            {this.props.game.stacks.map(
+              (stack, i) =>
+                i < 8 ? (
+                  <Stack
+                    key={stack.id}
+                    placement={`family-${this.adjustIndex(i) + 1}`}
+                    {...stack}
+                  />
+                ) : null
+            )}
 
-            {this.props.game.stockStacks.map((stack, i) => (
-              <Stack
-                key={stack.id}
-                placement={`stock-${this.adjustIndex(i) + 1}`}
-                {...stack}
-              />
-            ))}
+            {this.props.game.stacks.map(
+              (stack, i) =>
+                i >= 8 && i < 16 ? (
+                  <Stack
+                    key={stack.id}
+                    placement={`stock-${this.adjustIndex(i - 8) + 1}`}
+                    {...stack}
+                  />
+                ) : null
+            )}
 
             <Stack
               placement="self-draw"
-              {...this.props.game.playerStacks[this.selfIndex()].draw}
+              {...this.props.game.stacks[16 + this.selfIndex() * 3]}
             />
 
             <Stack
               placement="self-discard"
-              {...this.props.game.playerStacks[this.selfIndex()].discard}
+              {...this.props.game.stacks[17 + this.selfIndex() * 3]}
             />
 
             <Stack
               placement="self-main"
-              {...this.props.game.playerStacks[this.selfIndex()].main}
+              {...this.props.game.stacks[18 + this.selfIndex() * 3]}
             />
           </Fragment>
         ) : (
@@ -136,16 +142,8 @@ class Game extends Component {
 
 Game.propTypes = {
   game: shape({
-    playerTurn: number.isRequired,
-    familyStacks: arrayOf(StackType),
-    stockStacks: arrayOf(StackType),
-    playerStacks: arrayOf(
-      shape({
-        draw: StackType.isRequired,
-        discard: StackType.isRequired,
-        main: StackType.isRequired
-      })
-    )
+    currentPlayerId: string.isRequired,
+    stacks: arrayOf(StackType)
   }),
   playerIds: arrayOf(string).isRequired
 };
@@ -155,7 +153,7 @@ Game.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  game: state.currentGame.game,
+  game: state.currentGame,
   playerIds: state.currentGame.players.map(p => p.id)
 });
 

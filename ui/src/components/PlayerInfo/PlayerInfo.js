@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, shape, string, number } from 'prop-types';
+import { arrayOf, shape, string } from 'prop-types';
 import styled from 'styled-components';
 
 import socket from '../../socket';
@@ -17,8 +17,8 @@ const Wrapper = styled.div`
   border-${props =>
     props.playerType === PLAYER_TYPES.SELF
       ? 'left'
-      : 'right'}: 10px solid ${props =>
-  props.activePlayer ? 'red' : COLORS.GREEN_DARK};
+      : 'right'}: 25px solid ${props =>
+  props.activePlayer ? 'red' : COLORS.GREY};
   color: ${COLORS.WHITE};
   display: flex;
   font-family: ${FONTS.DECO};
@@ -42,7 +42,7 @@ class PlayerInfo extends Component {
           p => p.id !== socket.getPlayerId()
         );
 
-        if (player.offline) {
+        if (!player.online) {
           return 'Opponent connection lost, waiting for reconnect...';
         }
 
@@ -55,11 +55,11 @@ class PlayerInfo extends Component {
   };
 
   activePlayer = () =>
-    this.props.playerType === PLAYER_TYPES.SELF
-      ? this.props.players.findIndex(p => p.id === socket.getPlayerId()) ===
-        this.props.playerTurn
-      : this.props.players.findIndex(p => p.id !== socket.getPlayerId()) ===
-        this.props.playerTurn;
+    !this.props.currentPlayerId || this.props.playerType === PLAYER_TYPES.SELF
+      ? this.props.players.find(p => p.id === socket.getPlayerId()).id ===
+        this.props.currentPlayerId
+      : this.props.players.find(p => p.id !== socket.getPlayerId()).id ===
+        this.props.currentPlayerId;
 
   render = () => (
     <Wrapper
@@ -79,16 +79,16 @@ PlayerInfo.propTypes = {
     })
   ).isRequired,
   playerType: string.isRequired,
-  playerTurn: number
+  currentPlayerId: string
 };
 
 PlayerInfo.defaultProps = {
-  playerTurn: null
+  currentPlayerId: null
 };
 
 const mapStateToProps = state => ({
   players: state.currentGame.players,
-  playerTurn: state.currentGame.game ? state.currentGame.game.playerTurn : null
+  currentPlayerId: state.currentGame.currentPlayerId
 });
 
 export default connect(mapStateToProps)(PlayerInfo);

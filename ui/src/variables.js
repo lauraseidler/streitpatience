@@ -2,6 +2,7 @@ export const COLORS = {
   BLACK: '#111',
   GREEN_DARK: '#01200F',
   GREEN_LIGHT: '#157F1F',
+  GREY: '#555',
   FADE: 'rgba(255, 255, 255, 0.5)',
   RED: '#F00',
   WHITE: '#FFF'

@@ -1,17 +1,9 @@
 import express from 'express';
-import sha256 from 'js-sha256';
 import socketIO from 'socket.io';
 
-import GameConnectionHandler from './handlers/GameConnectionHandler';
-import {
-  setOnlinePlayers,
-  createNewGame,
-  reconnectPlayer,
-  addPlayer
-} from './redux/actions';
-import store from './redux/store';
-import uiActionTypes from './ui-action-types.js';
-import GamePlayHandler from './handlers/GamePlayHandler';
+import ConnectionHandler from './handlers/ConnectionHandler';
+import GameHandler from './handlers/GameHandler';
+import uiActionTypes from './ui-action-types';
 
 const port = process.env.PORT || 80;
 const wsPort = process.env.WS_PORT || 4000;
@@ -26,34 +18,51 @@ app.listen(port, () => {
   console.log(`Socket.IO server listening on port ${wsPort}`);
 });
 
+const games = {};
+const connectionHandler = new ConnectionHandler(io, games);
+
 io.on('connection', client => {
-  const gch = new GameConnectionHandler(io, client);
-  const gph = new GamePlayHandler(io, client);
+  connectionHandler.connectPlayer(client.id);
+  client.emit(uiActionTypes.SET_GAME_VIEW, 'ACTION_BOARD');
 
-  store.dispatch(setOnlinePlayers(store.getState().onlinePlayers + 1));
-
-  io.sockets.emit(
-    uiActionTypes.SET_ONLINE_PLAYERS,
-    store.getState().onlinePlayers
-  );
-
-  client.emit(uiActionTypes.SET_GAMES, store.getState().games);
+  const gameHandler = new GameHandler(io, client, games, connectionHandler);
+  gameHandler.updateGameListForAll();
 
   client.on('disconnect', () => {
-    gch.cleanUpGame();
-    store.dispatch(setOnlinePlayers(store.getState().onlinePlayers - 1));
-
-    io.sockets.emit(
-      uiActionTypes.SET_ONLINE_PLAYERS,
-      store.getState().onlinePlayers
-    );
+    connectionHandler.disconnectPlayer(client.id);
+    gameHandler.updateGameForRoom();
   });
 
-  client.on('newGame', gch.newGame.bind(gch));
+  client.on('setUsername', username => {
+    connectionHandler.setUsername(client.id, username);
+  });
 
-  client.on('joinGame', gch.joinGame.bind(gch));
+  client.on('doReconnect', ({ clientId, gameId, checkOnly }) => {
+    const reconnectAllowed = connectionHandler.reconnectPlayer(
+      client.id,
+      clientId,
+      gameId,
+      checkOnly
+    );
 
-  client.on('reconnectGame', gch.reconnectGame.bind(gch));
+    if (reconnectAllowed && !checkOnly) {
+      gameHandler.playerHasJoinedGame(gameId);
+    }
+  });
 
-  client.on('stackClick', gph.stackClick.bind(gph));
+  client.on('abortReconnect', ({ clientId }) => {
+    connectionHandler.disconnectPlayer(clientId, true);
+  });
+
+  client.on('newGame', () => {
+    gameHandler.createGame();
+  });
+
+  client.on('joinGame', gameId => {
+    gameHandler.joinGame(gameId);
+  });
+
+  client.on('stackClick', stackId => {
+    gameHandler.stackClick(stackId);
+  });
 });

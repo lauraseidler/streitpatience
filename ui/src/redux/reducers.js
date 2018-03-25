@@ -42,7 +42,7 @@ const setGameView = (state, action) => {
 
 const setCurrentGame = (state, action) => {
   localStorage.setItem('gameId', action.payload.id);
-  localStorage.setItem('socketClientId', socket.getId());
+  localStorage.setItem('clientId', socket.getId());
 
   return {
     ...state,
@@ -58,7 +58,7 @@ const promptReconnect = state => ({
 
 const abortReconnect = state => {
   localStorage.removeItem('gameId');
-  localStorage.removeItem('socketClientId');
+  localStorage.removeItem('clientId');
 
   return {
     ...state,
