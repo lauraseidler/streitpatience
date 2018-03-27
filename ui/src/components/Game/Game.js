@@ -9,6 +9,7 @@ import PlayerInfo, { PLAYER_TYPES } from '../PlayerInfo/PlayerInfo';
 import socket from '../../socket';
 import Stack from '../Stack/Stack';
 import Errors from '../Errors/Errors';
+import GameEndScreen from '../GameEndScreen/GameEndScreen';
 
 const GameTable = styled.div`
   display: grid;
@@ -31,8 +32,8 @@ const GameBoard = styled.div`
 
   grid-template-columns:
     minmax(36px, 86px) minmax(36px, 86px)
-    minmax(0, 1fr) minmax(172px, 4fr) minmax(36px, 86px)
-    minmax(36px, 86px) minmax(172px, 4fr) minmax(0, 1fr)
+    minmax(108px, 1fr) minmax(36px, 86px) minmax(36px, 86px)
+    minmax(36px, 86px) minmax(36px, 86px) minmax(108px, 1fr)
     minmax(36px, 86px) minmax(36px, 86px);
 
   grid-template-areas:
@@ -78,6 +79,9 @@ class Game extends Component {
         {this.props.game.stacks.length && this.selfIndex() > -1 ? (
           <Fragment>
             <Errors />
+            {this.props.game.winner ? (
+              <GameEndScreen winner={this.props.game.winner} />
+            ) : null}
             <Stack
               placement="opponent-draw"
               {...this.props.game.stacks[16 + this.opponentIndex() * 3]}
@@ -109,6 +113,7 @@ class Game extends Component {
                 i >= 8 && i < 16 ? (
                   <Stack
                     key={stack.id}
+                    align={this.adjustIndex(i - 8) < 4 ? 'right' : 'left'}
                     placement={`stock-${this.adjustIndex(i - 8) + 1}`}
                     {...stack}
                   />

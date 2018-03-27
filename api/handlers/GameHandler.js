@@ -151,8 +151,16 @@ class GameHandler {
       }
 
       if (clickedStack.cards.length < 1) {
-        this._sendError(`There's no cards on this stack!`);
-        return;
+        if (
+          !clickedStack.isPlayerStack(this.playerId) ||
+          !this.playerGame.hasCardsOnDiscardPile(this.playerId) ||
+          clickedStack.type !== STACK_TYPES.DRAW
+        ) {
+          this._sendError(`There's no cards on this stack!`);
+          return;
+        }
+
+        this.playerGame.refillDrawStack(this.playerId);
       }
 
       clickedStack.isActive = true;
@@ -208,6 +216,8 @@ class GameHandler {
     }
 
     if (
+      clickedStack.type === STACK_TYPES.STOCK &&
+      !clickedStack.cards.length &&
       this.playerGame.limitedStockStacks &&
       this.playerGame.numberOfStockStacksFilled() === 4
     ) {
@@ -231,7 +241,9 @@ class GameHandler {
     clickedStack.addCard(activeStack.removeCard());
     activeStack.isActive = false;
 
-    if (
+    if (this.playerGame.hasPlayerWon(this.playerId)) {
+      this.playerGame.winner = this.playerId;
+    } else if (
       clickedStack.type === STACK_TYPES.DISCARD &&
       clickedStack.isPlayerStack(this.playerId)
     ) {

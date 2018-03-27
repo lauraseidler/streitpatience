@@ -12,6 +12,10 @@ const Wrapper = styled.div`
   border-radius: 2px;
   cursor: pointer;
   grid-area: ${props => props.placement};
+  position: relative;
+
+  ${props => !props.align || `border-style: solid none solid none;`}
+  border-${props => props.align}-style: solid;
 `;
 
 class Stack extends Component {
@@ -24,15 +28,23 @@ class Stack extends Component {
       placement={this.props.placement}
       onClick={() => socket.emit('stackClick', this.props.id)}
       isActive={this.props.isActive}
+      align={this.props.align}
     >
       {this.props.cards.map(
         (card, index) =>
-          /* this.props.type === 'STOCK' || */ index === 0 ? (
+          this.props.type === 'STOCK' || index === 0 ? (
             <Card
               {...card}
+              align={this.props.align}
               key={`${card.suit}-${card.rank}-${this.props.player}`}
+              offset={
+                this.props.type === 'STOCK'
+                  ? this.props.cards.length - 1 - index
+                  : 0
+              }
+              index={index}
               isFaceVisible={this.isFaceVisible()}
-              isActive={this.props.isActive}
+              isActive={index === 0 && this.props.isActive}
             />
           ) : null
       )}

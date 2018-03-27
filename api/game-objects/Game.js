@@ -63,6 +63,13 @@ class Game {
   limitedStockStacks = true;
 
   /**
+   * Winner of the game (unique player ID)
+   *
+   * @type {string}
+   */
+  winner = null;
+
+  /**
    * Create new game.
    *
    * @param {string} name Game name
@@ -103,6 +110,16 @@ class Game {
     if (this.currentPlayerId === oldPlayer.id) {
       this.currentPlayerId = newPlayer.id;
     }
+
+    if (this.winner === oldPlayer.id) {
+      this.winner === newPlayer.id;
+    }
+
+    this.stacks.forEach(stack => {
+      if (stack.player == oldPlayer.id) {
+        stack.player = newPlayer.id;
+      }
+    });
   }
 
   /**
@@ -180,7 +197,7 @@ class Game {
    * @returns {bool}
    */
   numberOfStockStacksFilled() {
-    let number;
+    let number = 0;
 
     for (let i = 8; i < 16; i++) {
       if (this.stacks[i].cards.length) {
@@ -243,6 +260,33 @@ class Game {
     }
 
     return false;
+  }
+
+  hasCardsOnDiscardPile(playerId) {
+    const playerIndex = this.players.findIndex(p => p.id === playerId);
+    return this.stacks[17 + playerIndex * 3].cards.length > 0;
+  }
+
+  refillDrawStack(playerId) {
+    const playerIndex = this.players.findIndex(p => p.id === playerId);
+    const drawStack = this.stacks[16 + playerIndex * 3];
+    const discardStack = this.stacks[17 + playerIndex * 3];
+
+    drawStack.setCards(discardStack.cards.slice().reverse());
+    discardStack.setCards([]);
+  }
+
+  hasPlayerWon(playerId) {
+    const playerIndex = this.players.findIndex(p => p.id === playerId);
+    const drawStack = this.stacks[16 + playerIndex * 3];
+    const discardStack = this.stacks[17 + playerIndex * 3];
+    const mainStack = this.stacks[18 + playerIndex * 3];
+
+    return (
+      !drawStack.cards.length &&
+      !discardStack.cards.length &&
+      !mainStack.cards.length
+    );
   }
 
   /**

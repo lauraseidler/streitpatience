@@ -70,7 +70,6 @@ class Player {
    */
   setGameId(gameId) {
     this.gameId = gameId;
-    this.cardsPlayed = 0;
   }
 
   /**
