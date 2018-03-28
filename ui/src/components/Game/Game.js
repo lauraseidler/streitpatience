@@ -54,7 +54,7 @@ const WaitingNotice = styled.p`
   font-family: ${FONTS.DECO};
   font-size: 2rem;
   grid-area: 2 / 4 / 6 / 10;
-  justify-contents: center;
+  justify-content: center;
   margin: 0;
   padding: 100px;
   text-align: center;
