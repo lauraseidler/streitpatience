@@ -5,19 +5,18 @@ import { string, number, bool } from 'prop-types';
 import { COLORS, FONTS } from '../../variables';
 
 const Wrapper = styled.div`
-  align-items: ${props => (props.index === 0 ? 'center' : 'flex-start')};
+  align-items: center;
   background: ${COLORS.WHITE};
   border: 2px solid ${props => (props.isActive ? '#0f0' : COLORS.WHITE)};
   border-radius: 2px;
   box-shadow: 0px 0px 2px ${COLORS.BLACK};
   color: ${props => COLORS[props.color]};
   display: inline-flex;
-  flex-direction: column;
+  flex-direction: row;
   font-family: ${FONTS.DECO};
   height: 100%;
-  justify-content: ${props =>
-    props.index === 0 ? 'space-evenly' : 'flex-start'};
-  padding: ${props => (props.index === 0 ? 10 : 2)}px;
+  justify-content: space-between;
+  padding: 3px;
   width: 100%;
 
   ${props =>
@@ -31,25 +30,18 @@ const Wrapper = styled.div`
       background-size: 30px 50px;
   `};
 
-  ${props =>
-    props.index === 0 ||
-    props.align === 'left' ||
-    `
-    transform: rotate(180deg);
-  `};
-
   position: absolute;
   top: 0;
   right: auto;
   left: auto;
-  ${props => props.align}: ${props => props.offset * 20}px;
+  ${props => props.align}: ${props => props.offset * 25}px;
   z-index: ${props => props.offset + 1};
   bottom: 0;
   user-select: none;
 `;
 
 const Rank = styled.span`
-  font-size: ${props => (props.index === 0 ? '2.3rem' : '1.1rem')};
+  font-size: ${props => (props.large ? '1.9rem' : '1.1rem')};
   letter-spacing: -5px;
   line-height: 1;
   padding-right: 5px;
@@ -58,10 +50,19 @@ const Rank = styled.span`
 `;
 
 const Suit = styled.span`
-  font-size: ${props => (props.index === 0 ? '3.5rem' : '1.5rem')};
+  font-size: ${props => (props.large ? '2.8rem' : '1.5rem')};
   line-height: 0.7;
   pointer-events: none;
   user-select: none;
+`;
+
+const SymbolWrapper = styled.div`
+  align-self: ${props => props.placement};
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  ${props => !props.flipped || `transform: rotate(180deg);`};
 `;
 
 class Card extends Component {
@@ -99,11 +100,27 @@ class Card extends Component {
     <Wrapper {...this.props}>
       {!this.props.isFaceVisible || (
         <Fragment>
-          <Rank index={this.props.index}>{this.rank()}</Rank>
-          <Suit
-            index={this.props.index}
-            dangerouslySetInnerHTML={{ __html: `${this.suitSymbol()}` }}
-          />
+          <SymbolWrapper placement="flex-start">
+            <Rank>{this.rank()}</Rank>
+            <Suit
+              dangerouslySetInnerHTML={{ __html: `${this.suitSymbol()}` }}
+            />
+          </SymbolWrapper>
+
+          <SymbolWrapper placement="center">
+            <Rank large>{this.rank()}</Rank>
+            <Suit
+              large
+              dangerouslySetInnerHTML={{ __html: `${this.suitSymbol()}` }}
+            />
+          </SymbolWrapper>
+
+          <SymbolWrapper placement="flex-end" flipped>
+            <Rank>{this.rank()}</Rank>
+            <Suit
+              dangerouslySetInnerHTML={{ __html: `${this.suitSymbol()}` }}
+            />
+          </SymbolWrapper>
         </Fragment>
       )}
     </Wrapper>

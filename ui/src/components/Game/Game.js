@@ -13,7 +13,7 @@ import GameEndScreen from '../GameEndScreen/GameEndScreen';
 
 const GameTable = styled.div`
   display: grid;
-  grid: 50px 1fr 50px / 1fr;
+  grid: 1fr / 100px 1fr 100px;
   grid-gap: ${GRID_GAP};
   min-height: 0;
 `;
@@ -26,25 +26,21 @@ const GameBoard = styled.div`
 
   grid-gap: ${GRID_GAP};
 
-  grid-template-rows:
-    minmax(50px, 120px) 1fr minmax(50px, 120px) minmax(50px, 120px)
-    minmax(50px, 120px) minmax(50px, 120px) 1fr minmax(50px, 120px);
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
 
   grid-template-columns:
-    minmax(36px, 86px) minmax(36px, 86px)
-    minmax(108px, 1fr) minmax(36px, 86px) minmax(36px, 86px)
-    minmax(36px, 86px) minmax(36px, 86px) minmax(108px, 1fr)
-    minmax(36px, 86px) minmax(36px, 86px);
+    minmax(36px, 95px) minmax(36px, 95px)
+    minmax(36px, 95px) 1fr minmax(36px, 95px) minmax(36px, 95px)
+    minmax(36px, 95px) minmax(36px, 95px) 1fr minmax(36px, 95px)
+    minmax(36px, 95px) minmax(36px, 95px);
 
   grid-template-areas:
-    'opponent-draw opponent-discard . . . . . . . .'
-    '. . . . . . . . . .'
-    'opponent-main . . stock-1 family-1 family-8 stock-8 . . .'
-    '. . . stock-2 family-2 family-7 stock-7 . . .'
-    '. . . stock-3 family-3 family-6 stock-6 . . .'
-    '. . . stock-4 family-4 family-5 stock-5 . . self-main'
-    '. . . . . . . . . .'
-    '. . . . . . . . self-discard self-draw';
+    'opponent-main opponent-draw opponent-discard . label-4 label-5 label-5 label-6 . . . .'
+    '. . . . stock-1 family-1 family-8 stock-8 . . . .'
+    '. . . . stock-2 family-2 family-7 stock-7 . . . .'
+    '. . . . stock-3 family-3 family-6 stock-6 . . . .'
+    '. . . . stock-4 family-4 family-5 stock-5 . label-1 label-2 label-3'
+    '. . . . . . . . . self-discard self-draw self-main';
 
   min-height: 0;
   overflow: hidden;
@@ -57,11 +53,19 @@ const WaitingNotice = styled.p`
   display: flex;
   font-family: ${FONTS.DECO};
   font-size: 2rem;
-  grid-area: 3 / 4 / 7 / 8;
+  grid-area: 2 / 4 / 6 / 10;
   justify-contents: center;
   margin: 0;
   padding: 100px;
   text-align: center;
+`;
+
+const StackLabel = styled.span`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-family: ${FONTS.DECO};
+  grid-area: ${props => props.placement};
 `;
 
 class Game extends Component {
@@ -97,6 +101,10 @@ class Game extends Component {
               {...this.props.game.stacks[18 + this.opponentIndex() * 3]}
             />
 
+            <StackLabel placement="label-4">Stock</StackLabel>
+            <StackLabel placement="label-5">Family</StackLabel>
+            <StackLabel placement="label-6">Stock</StackLabel>
+
             {this.props.game.stacks.map(
               (stack, i) =>
                 i < 8 ? (
@@ -119,6 +127,10 @@ class Game extends Component {
                   />
                 ) : null
             )}
+
+            <StackLabel placement="label-1">Discard</StackLabel>
+            <StackLabel placement="label-2">Draw</StackLabel>
+            <StackLabel placement="label-3">Main</StackLabel>
 
             <Stack
               placement="self-draw"

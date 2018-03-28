@@ -7,7 +7,7 @@ import ActionButton from '../ActionButton/ActionButton';
 
 const Grid = styled.div`
   display: grid;
-  grid: auto 1fr / 1fr;
+  grid: 1fr / 100px 1fr;
   grid-gap: ${GRID_GAP};
   min-height: 0;
 `;
@@ -29,8 +29,8 @@ const FullScrollContainer = styled.div`
 
 const TextArea = props => (
   <Grid>
-    <ActionButton view={GAME_VIEWS.ACTION_BOARD}>
-      Back to main screen
+    <ActionButton view={GAME_VIEWS.ACTION_BOARD} vertical>
+      Back
     </ActionButton>
 
     <FullScrollContainer>{props.children}</FullScrollContainer>

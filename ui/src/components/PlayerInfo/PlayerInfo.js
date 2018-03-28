@@ -12,19 +12,23 @@ export const PLAYER_TYPES = {
 };
 
 const Wrapper = styled.div`
-  align-items: center;
+  align-items: ${props =>
+    props.playerType === PLAYER_TYPES.SELF ? 'flex-end' : 'flex-start'};
   background: ${COLORS.GREEN_DARK};
   border-${props =>
     props.playerType === PLAYER_TYPES.SELF
-      ? 'left'
-      : 'right'}: 25px solid ${props =>
+      ? 'top'
+      : 'bottom'}: 100px solid ${props =>
   props.activePlayer ? 'red' : COLORS.GREY};
   color: ${COLORS.WHITE};
   display: flex;
   font-family: ${FONTS.DECO};
-  justify-content: ${props =>
-    props.playerType === PLAYER_TYPES.SELF ? 'flex-end' : 'flex-start'};
+  font-size: 1.3rem;
+  hyphens: auto;
+  justify-content: center;
+  line-height: 1;
   padding: ${GRID_GAP};
+  word-break: break-word;
 `;
 
 class PlayerInfo extends Component {
@@ -35,7 +39,7 @@ class PlayerInfo extends Component {
 
       case PLAYER_TYPES.OPPONENT: {
         if (this.props.players.length < 2) {
-          return 'Waiting for opponent...';
+          return 'Wai­ting for oppo­nent...';
         }
 
         const player = this.props.players.find(
@@ -43,7 +47,7 @@ class PlayerInfo extends Component {
         );
 
         if (!player.online) {
-          return 'Opponent connection lost, waiting for reconnect...';
+          return 'Wai­ting for oppo­nent...';
         }
 
         return player.username;

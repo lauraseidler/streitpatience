@@ -6,7 +6,7 @@ import ActionButton from '../ActionButton/ActionButton';
 
 const Grid = styled.div`
   display: grid;
-  grid: 1fr 150px 150px / 1fr 1fr;
+  grid: 1fr 150px / 1fr 1fr;
   grid-gap: ${GRID_GAP};
   height: 100%;
 `;
@@ -17,10 +17,9 @@ const ActionBoard = () => (
     <ActionButton bg={COLORS.GREEN_LIGHT} view={GAME_VIEWS.JOIN_GAME}>
       Join game
     </ActionButton>
-    <ActionButton bg={COLORS.GREEN_LIGHT} view={GAME_VIEWS.RULES}>
-      Rules
+    <ActionButton bg={COLORS.GREEN_LIGHT} view={GAME_VIEWS.HELP}>
+      Help
     </ActionButton>
-    <ActionButton view={GAME_VIEWS.ABOUT}>About</ActionButton>
     <ActionButton view={GAME_VIEWS.USERNAME_SETTING}>Set username</ActionButton>
   </Grid>
 );

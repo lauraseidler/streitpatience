@@ -3,28 +3,27 @@ import { connect } from 'react-redux';
 import { string } from 'prop-types';
 
 import { GAME_VIEWS } from '../../variables';
-import AboutContent from '../AboutContent/AboutContent';
 import ActionBoard from '../ActionBoard/ActionBoard';
-import NewGame from '../NewGame/NewGame';
-import RulesContent from '../RulesContent/RulesContent';
-import TextArea from '../TextArea/TextArea';
 import Game from '../Game/Game';
-import ReconnectPrompt from '../ReconnectPrompt/ReconnectPrompt';
+import HelpContent from '../HelpContent/HelpContent';
 import JoinGame from '../JoinGame/JoinGame';
+import NewGame from '../NewGame/NewGame';
+import ReconnectPrompt from '../ReconnectPrompt/ReconnectPrompt';
+import TextArea from '../TextArea/TextArea';
 import UsernameSetting from '../UsernameSetting/UsernameSetting';
 
 const GameArea = props => {
   switch (props.gameView) {
-    case GAME_VIEWS.ABOUT:
-      return (
-        <TextArea>
-          <AboutContent />
-        </TextArea>
-      );
     case GAME_VIEWS.ACTION_BOARD:
       return <ActionBoard />;
     case GAME_VIEWS.GAME:
       return <Game />;
+    case GAME_VIEWS.HELP:
+      return (
+        <TextArea>
+          <HelpContent />
+        </TextArea>
+      );
     case GAME_VIEWS.JOIN_GAME:
       return (
         <TextArea>
@@ -39,12 +38,6 @@ const GameArea = props => {
       );
     case GAME_VIEWS.RECONNECT_PROMPT:
       return <ReconnectPrompt />;
-    case GAME_VIEWS.RULES:
-      return (
-        <TextArea>
-          <RulesContent />
-        </TextArea>
-      );
     case GAME_VIEWS.USERNAME_SETTING:
       return (
         <TextArea>

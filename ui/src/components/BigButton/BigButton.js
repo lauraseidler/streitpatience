@@ -13,6 +13,7 @@ const BigButton = styled.button`
   justify-content: center;
   padding: 5px 50px 0;
   text-align: center;
+  word-break: break-all;
 
   &:hover {
     color: ${COLORS.WHITE};
