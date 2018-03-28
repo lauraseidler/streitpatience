@@ -1,6 +1,6 @@
+import { arrayOf, bool, string } from 'prop-types';
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { bool, string, arrayOf, number } from 'prop-types';
 
 import socket from '../../socket';
 import { CardType } from '../../types';
@@ -53,15 +53,17 @@ class Stack extends Component {
 }
 
 Stack.propTypes = {
+  align: string,
   cards: arrayOf(CardType).isRequired,
   id: string.isRequired,
   isActive: bool,
   placement: string.isRequired,
-  player: number,
+  player: string,
   type: string.isRequired
 };
 
 Stack.defaultProps = {
+  align: null,
   isActive: false,
   player: null
 };

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { COLORS } from '../../variables';
 
 const TextHighlight = styled.span`

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { COLORS, FONTS } from '../../variables';
 
 const Button = styled.button`

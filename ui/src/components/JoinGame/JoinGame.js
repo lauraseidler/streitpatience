@@ -1,10 +1,10 @@
+import { arrayOf, shape, string } from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, shape, string } from 'prop-types';
 
 import socket from '../../socket';
-import TextHeadline from '../TextHeadline/TextHeadline';
 import Button from '../Button/Button';
+import TextHeadline from '../TextHeadline/TextHeadline';
 
 const JoinGame = props => (
   <Fragment>

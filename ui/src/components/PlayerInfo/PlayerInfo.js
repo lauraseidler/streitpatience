@@ -1,10 +1,10 @@
+import { arrayOf, shape, string } from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { arrayOf, shape, string } from 'prop-types';
 import styled from 'styled-components';
 
 import socket from '../../socket';
-import { FONTS, COLORS, GRID_GAP } from '../../variables';
+import { COLORS, FONTS, GRID_GAP } from '../../variables';
 
 export const PLAYER_TYPES = {
   SELF: 'SELF',

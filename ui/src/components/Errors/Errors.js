@@ -1,8 +1,9 @@
+import { arrayOf, string } from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { arrayOf, string } from 'prop-types';
-import { GRID_GAP, COLORS } from '../../variables';
+
+import { COLORS, GRID_GAP } from '../../variables';
 
 const Wrapper = styled.div`
   left: ${GRID_GAP};

@@ -1,8 +1,8 @@
+import { element } from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { element } from 'prop-types';
 
-import { GAME_VIEWS, COLORS, GRID_GAP } from '../../variables';
+import { COLORS, GAME_VIEWS, GRID_GAP } from '../../variables';
 import ActionButton from '../ActionButton/ActionButton';
 
 const Grid = styled.div`

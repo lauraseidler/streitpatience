@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 
 import socket from '../../socket';
-import { GRID_GAP, COLORS } from '../../variables';
-import TextHeadline from '../TextHeadline/TextHeadline';
+import { COLORS, GRID_GAP } from '../../variables';
 import BigButton from '../BigButton/BigButton';
+import TextHeadline from '../TextHeadline/TextHeadline';
 
 const Grid = styled.div`
   display: grid;

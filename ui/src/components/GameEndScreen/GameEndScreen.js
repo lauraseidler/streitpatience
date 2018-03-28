@@ -1,3 +1,4 @@
+import { string } from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -28,5 +29,9 @@ const GameEndScreen = props => (
     {props.winner === socket.getPlayerId() ? 'You win' : 'You lose'}
   </Wrapper>
 );
+
+GameEndScreen.propTypes = {
+  winner: string.isRequired
+};
 
 export default GameEndScreen;

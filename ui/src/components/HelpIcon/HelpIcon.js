@@ -17,4 +17,5 @@ const Icon = styled.span`
 `;
 
 const HelpIcon = () => <Icon title="Help is coming, hang tight!">?</Icon>;
+
 export default HelpIcon;

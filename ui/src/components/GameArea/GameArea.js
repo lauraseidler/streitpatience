@@ -1,6 +1,6 @@
+import { string } from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { string } from 'prop-types';
 
 import { GAME_VIEWS } from '../../variables';
 import ActionBoard from '../ActionBoard/ActionBoard';

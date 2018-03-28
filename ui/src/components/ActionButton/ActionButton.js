@@ -1,6 +1,6 @@
+import { func, string } from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { func, string } from 'prop-types';
 
 import { setGameView } from '../../redux/actions';
 import BigButton from '../BigButton/BigButton';
@@ -29,10 +29,6 @@ ActionButton.defaultProps = {
   view: null
 };
 
-const mapDispatchToProps = dispatch => ({
-  setGameView(view) {
-    dispatch(setGameView(view));
-  }
-});
+const mapDispatchToProps = { setGameView };
 
-export default connect(() => ({}), mapDispatchToProps)(ActionButton);
+export default connect(null, mapDispatchToProps)(ActionButton);

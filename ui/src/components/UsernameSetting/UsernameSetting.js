@@ -1,13 +1,13 @@
+import { func, string } from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { func, string } from 'prop-types';
 
 import { setGameView } from '../../redux/actions';
-import TextHeadline from '../TextHeadline/TextHeadline';
-import Button from '../Button/Button';
-import { GAME_VIEWS, COLORS, FONTS } from '../../variables';
 import socket from '../../socket';
+import { COLORS, FONTS, GAME_VIEWS } from '../../variables';
+import Button from '../Button/Button';
+import TextHeadline from '../TextHeadline/TextHeadline';
 
 const Input = styled.input`
   background: none;
@@ -47,9 +47,8 @@ class UsernameSetting extends Component {
 
       <p>
         Please note that while usernames do not have to be unique (and you can
-        also remove your username alltogether by leaving the field blank),
-        you're still encouraged to pick something to easily identify you as a
-        player.
+        also remove your username alltogether by leaving the field blank), you{`'`}re
+        still encouraged to pick something to easily identify you as a player.
       </p>
 
       <Button onClick={() => this.saveUsername()}>Save username</Button>
@@ -64,10 +63,6 @@ UsernameSetting.propTypes = {
 
 const mapStateToProps = state => ({ username: state.username });
 
-const mapDispatchToProps = dispatch => ({
-  setGameView(view) {
-    dispatch(setGameView(view));
-  }
-});
+const mapDispatchToProps = { setGameView };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UsernameSetting);

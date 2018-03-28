@@ -8,13 +8,6 @@ export const COLORS = {
   WHITE: '#FFF'
 };
 
-export const FONTS = {
-  DECO: '"Bowlby One SC", cursive',
-  TEXT: '"Heebo", sans-serif'
-};
-
-export const GRID_GAP = '10px';
-
 export const GAME_VIEWS = {
   ACTION_BOARD: 'ACTION_BOARD',
   GAME: 'GAME',
@@ -23,4 +16,11 @@ export const GAME_VIEWS = {
   NEW_GAME: 'NEW_GAME',
   RECONNECT_PROMPT: 'RECONNECT_PROMPT',
   USERNAME_SETTING: 'USERNAME_SETTING'
+};
+
+export const GRID_GAP = '10px';
+
+export const FONTS = {
+  DECO: '"Bowlby One SC", cursive',
+  TEXT: '"Heebo", sans-serif'
 };

@@ -1,14 +1,15 @@
+import { bool, number, string } from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import styled from 'styled-components';
-import { string, number, bool } from 'prop-types';
 
 import { COLORS, FONTS } from '../../variables';
 
 const Wrapper = styled.div`
   align-items: center;
   background: ${COLORS.WHITE};
-  border: 2px solid ${props => (props.isActive ? '#0f0' : COLORS.WHITE)};
   border-radius: 2px;
+  border: 2px solid ${props => (props.isActive ? '#0f0' : COLORS.WHITE)};
+  bottom: 0;
   box-shadow: 0px 0px 2px ${COLORS.BLACK};
   color: ${props => COLORS[props.color]};
   display: inline-flex;
@@ -16,11 +17,19 @@ const Wrapper = styled.div`
   font-family: ${FONTS.DECO};
   height: 100%;
   justify-content: space-between;
+  left: auto;
   padding: 3px;
+  position: absolute;
+  right: auto;
+  top: 0;
+  user-select: none;
   width: 100%;
+  z-index: ${props => props.offset + 1};
+
+  ${props => props.align}: ${props => props.offset * 25}px;
 
   ${props =>
-    props.isFaceVisible ||
+    !props.isFaceVisible &&
     `
       background-color: ${COLORS.GREEN_DARK};
       background-image:
@@ -29,15 +38,6 @@ const Wrapper = styled.div`
       background-position: left -23px top -46px;
       background-size: 30px 50px;
   `};
-
-  position: absolute;
-  top: 0;
-  right: auto;
-  left: auto;
-  ${props => props.align}: ${props => props.offset * 25}px;
-  z-index: ${props => props.offset + 1};
-  bottom: 0;
-  user-select: none;
 `;
 
 const Rank = styled.span`
@@ -57,12 +57,12 @@ const Suit = styled.span`
 `;
 
 const SymbolWrapper = styled.div`
-  align-self: ${props => props.placement};
   align-items: center;
+  align-self: ${props => props.placement};
   display: flex;
   flex-direction: column;
 
-  ${props => !props.flipped || `transform: rotate(180deg);`};
+  ${props => props.flipped && `transform: rotate(180deg);`};
 `;
 
 class Card extends Component {
@@ -98,7 +98,7 @@ class Card extends Component {
 
   render = () => (
     <Wrapper {...this.props}>
-      {!this.props.isFaceVisible || (
+      {this.props.isFaceVisible && (
         <Fragment>
           <SymbolWrapper placement="flex-start">
             <Rank>{this.rank()}</Rank>

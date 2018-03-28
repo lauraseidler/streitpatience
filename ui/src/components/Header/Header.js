@@ -1,6 +1,6 @@
+import { number, string } from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { number, string } from 'prop-types';
 import styled from 'styled-components';
 
 import { COLORS, FONTS } from '../../variables';

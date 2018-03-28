@@ -1,15 +1,15 @@
+import { arrayOf, shape, string } from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { shape, arrayOf, string } from 'prop-types';
 
-import { StackType } from '../../types';
-import { COLORS, GRID_GAP, FONTS } from '../../variables';
-import PlayerInfo, { PLAYER_TYPES } from '../PlayerInfo/PlayerInfo';
 import socket from '../../socket';
-import Stack from '../Stack/Stack';
+import { StackType } from '../../types';
+import { COLORS, FONTS, GRID_GAP } from '../../variables';
 import Errors from '../Errors/Errors';
 import GameEndScreen from '../GameEndScreen/GameEndScreen';
+import PlayerInfo, { PLAYER_TYPES } from '../PlayerInfo/PlayerInfo';
+import Stack from '../Stack/Stack';
 
 const GameTable = styled.div`
   display: grid;
@@ -61,11 +61,11 @@ const WaitingNotice = styled.p`
 `;
 
 const StackLabel = styled.span`
-  display: flex;
   align-items: flex-end;
-  justify-content: center;
+  display: flex;
   font-family: ${FONTS.DECO};
   grid-area: ${props => props.placement};
+  justify-content: center;
 `;
 
 class Game extends Component {
@@ -159,7 +159,7 @@ class Game extends Component {
 
 Game.propTypes = {
   game: shape({
-    currentPlayerId: string.isRequired,
+    currentPlayerId: string,
     stacks: arrayOf(StackType)
   }),
   playerIds: arrayOf(string).isRequired

@@ -1,4 +1,4 @@
-import { shape, number, string, arrayOf } from 'prop-types';
+import { arrayOf, number, shape, string } from 'prop-types';
 
 export const CardType = shape({
   suit: string.isRequired,
