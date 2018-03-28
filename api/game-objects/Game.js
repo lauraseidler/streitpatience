@@ -19,6 +19,9 @@ function shuffle(a) {
   }
 }
 
+/**
+ * Card game.
+ */
 class Game {
   /**
    * Unique game identifier.
@@ -262,11 +265,22 @@ class Game {
     return false;
   }
 
+  /**
+   * Whether there's cards on the player's discard pile.
+   *
+   * @param {string} playerId Unique player identifier
+   * @returns {bool}
+   */
   hasCardsOnDiscardPile(playerId) {
     const playerIndex = this.players.findIndex(p => p.id === playerId);
     return this.stacks[17 + playerIndex * 3].cards.length > 0;
   }
 
+  /**
+   * Refill player's draw stack.
+   *
+   * @param {string} playerId Unique player identifier
+   */
   refillDrawStack(playerId) {
     const playerIndex = this.players.findIndex(p => p.id === playerId);
     const drawStack = this.stacks[16 + playerIndex * 3];
@@ -276,6 +290,12 @@ class Game {
     discardStack.setCards([]);
   }
 
+  /**
+   * Whether a player has won the game.
+   *
+   * @param {string} playerId Unique player identifier
+   * @returns {bool}
+   */
   hasPlayerWon(playerId) {
     const playerIndex = this.players.findIndex(p => p.id === playerId);
     const drawStack = this.stacks[16 + playerIndex * 3];

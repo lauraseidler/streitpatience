@@ -36,21 +36,21 @@ class Stack {
   isActive = false;
 
   /**
-   * Stack type
+   * Stack type.
    *
    * @type {string}
    */
   type = null;
 
   /**
-   * Stack settings
+   * Stack settings.
    *
    * @type {Object}
    */
   settings = {};
 
   /**
-   * Player ID
+   * Player ID.
    *
    * @type {string}
    */
@@ -97,7 +97,14 @@ class Stack {
     this.cards = cards;
   }
 
-  cardAllowed(card, playerIndex) {
+  /**
+   * Whether a card is allowed to be played on the stack.
+   *
+   * @param {Card} card Playing card
+   * @param {string} playerId Unique player identifier
+   * @returns {bool}
+   */
+  cardAllowed(card, playerId) {
     switch (this.type) {
       case STACK_TYPES.FAMILY:
         if (!this.cards.length && card.rank === RANKS.ACE) {
@@ -135,7 +142,7 @@ class Stack {
 
       case STACK_TYPES.DISCARD:
       case STACK_TYPES.MAIN:
-        if (this.player === playerIndex) {
+        if (this.player === playerId) {
           // allow all cards on own piles)
           return true;
         }
@@ -232,7 +239,7 @@ class Stack {
   }
 
   /**
-   * Get properties to serialize for client
+   * Get properties to serialize for client.
    */
   toJSON() {
     return {

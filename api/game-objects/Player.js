@@ -1,3 +1,6 @@
+/**
+ * Game player.
+ */
 class Player {
   /**
    * Unique player ID.
@@ -73,7 +76,7 @@ class Player {
   }
 
   /**
-   * Get properties to serialize for client
+   * Get properties to serialize for client.
    */
   toJSON() {
     return {

@@ -4,7 +4,7 @@ import Player from '../game-objects/Player';
 import uiActionTypes from '../ui-action-types';
 
 /**
- * Handler for socket connections
+ * Handler for socket connections.
  */
 class ConnectionHandler {
   /**

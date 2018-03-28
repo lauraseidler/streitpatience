@@ -1,11 +1,11 @@
 import { sha256 } from 'js-sha256';
 
+import { STACK_TYPES } from '../game-objects/constants';
 import Game from '../game-objects/Game';
 import uiActionTypes from '../ui-action-types';
-import { STACK_TYPES } from '../game-objects/constants';
 
 /**
- * Handler for game events
+ * Handler for game events.
  */
 class GameHandler {
   /**
@@ -115,6 +115,11 @@ class GameHandler {
     this.playerHasJoinedGame(game.id);
   }
 
+  /**
+   * Handle click on a stack.
+   *
+   * @param {string} stackId Unique stack identifier
+   */
   stackClick(stackId) {
     if (!this._isPlayerInGame()) {
       return;

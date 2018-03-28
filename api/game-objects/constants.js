@@ -34,70 +34,32 @@ export const STACK_TYPES = {
   MAIN: 'MAIN'
 };
 
-export const FACE_DIRECTION = {
-  UP: 'UP',
-  DOWN: 'DOWN'
-};
-
-export const CARD_SPREAD = {
-  NONE: 'NONE',
-  EDGE: 'EDGE'
-};
-
-export const STACK_COLORS = {
-  SUIT: 'SUIT',
-  ALTERNATE: 'ALTERNATE'
-};
-
-export const RANK_RESTRICTION = {
-  UP: 'UP',
-  DOWN: 'DOWN',
-  BOTH: 'BOTH'
-};
-
 export const STACK_SETTINGS = {
   DEFAULT: {
-    face: FACE_DIRECTION.UP,
-    spread: CARD_SPREAD.NONE,
-    rank: null,
-    colors: null,
     belongsToPlayer: false,
-    canPickUpCard: true,
     canOpponentPutCard: false,
-    canPutCardBack: true,
-    opponentSettings: {
-      rank: RANK_RESTRICTION.BOTH,
-      colors: STACK_COLORS.SUIT
-    }
+    canPickUpCard: true,
+    canPutCardBack: true
   },
 
   FAMILY: {
-    colors: STACK_COLORS.SUIT,
-    rank: RANK_RESTRICTION.UP,
     canPickUpCard: false
   },
 
-  STOCK: {
-    spread: CARD_SPREAD.EDGE,
-    colors: STACK_COLORS.ALTERNATE,
-    rank: RANK_RESTRICTION.DOWN
-  },
+  STOCK: {},
 
   DRAW: {
-    face: FACE_DIRECTION.DOWN,
     belongsToPlayer: true,
     canPutCardBack: false
   },
 
   DISCARD: {
     belongsToPlayer: true,
-    canPickUpCard: false,
-    canOpponentPutCard: true
+    canOpponentPutCard: true,
+    canPickUpCard: false
   },
 
   MAIN: {
-    face: FACE_DIRECTION.DOWN,
-    firstCardFace: FACE_DIRECTION.UP,
     belongsToPlayer: true,
     canOpponentPutCard: true
   }
