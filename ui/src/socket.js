@@ -6,7 +6,7 @@ import store from './redux/store';
 import { setGameView } from './redux/actions';
 import { GAME_VIEWS } from './variables';
 
-const socket = openSocket(`http://localhost:${process.env.WS_PORT || 4000}`);
+const socket = openSocket(`http://${window.location.hostname}:${process.env.WS_PORT || 4000}`);
 
 let prevClientId;
 let prevGameId;

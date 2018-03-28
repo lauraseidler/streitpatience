@@ -45,6 +45,7 @@ const Wrapper = styled.div`
   ${props => props.align}: ${props => props.offset * 20}px;
   z-index: ${props => props.offset + 1};
   bottom: 0;
+  user-select: none;
 `;
 
 const Rank = styled.span`
@@ -52,11 +53,15 @@ const Rank = styled.span`
   letter-spacing: -5px;
   line-height: 1;
   padding-right: 5px;
+  pointer-events: none;
+  user-select: none;
 `;
 
 const Suit = styled.span`
   font-size: ${props => (props.index === 0 ? '3.5rem' : '1.5rem')};
   line-height: 0.7;
+  pointer-events: none;
+  user-select: none;
 `;
 
 class Card extends Component {
