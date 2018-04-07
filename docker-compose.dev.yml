@@ -1,0 +1,6 @@
+version: '3'
+
+services:
+  ui:
+    ports:
+      - 3000:$UI_PORT
